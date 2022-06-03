@@ -35,12 +35,14 @@ public class GenerateFloor : MonoBehaviour
     private void Start()
     {
         // For each tile in the tile pool:
+        // - Calculate the new y position of the current tile. Used to generate initially uneven terrain rather than oddly flat terrain on level start.
         // - Instantiate the object,
         // - Attach the FloorUpdate script, which controls it's movement.
         // - Set it's initial position to the standard y position and it's x position moving up from the start to the end of the screen
         //   to populate the screen with terrain on game start.
         for (var i = 0; i < tilePool.Length; i++)
         {
+            CalculateNewYPos();
             tilePool[i] = Instantiate(floorTile, new Vector3(-1, -1, 0), Quaternion.identity);
             tilePool[i].AddComponent<FloorUpdate>();
             tilePool[i].transform.position = new Vector3(i*4.5f, CurrentFloorYPos, 0);
