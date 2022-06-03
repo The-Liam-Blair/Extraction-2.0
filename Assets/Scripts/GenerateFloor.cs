@@ -6,8 +6,6 @@ using UnityEngine;
 
 // TODO CHECKLIST:
 // --> Terrain generated at start of the game fully rather than wait for terrain to fill up the screen -- Required.
-// --> Interaction with enemy spawning system such that smoothed terrain is generated to place a ground-based enemy without it clipping into the ground -- Required.
-// --> Colour -- Required.
 // --> Random Chance to create a specific terrain type, such as a hill, mountain range, or flat lands -- Optional.
 // --> Sloped terrain (If terrain moves up/down, change from a rigid square to triangular shape to create smoothness, chance based etc) -- Optional.
 
@@ -17,26 +15,31 @@ public class GenerateFloor : MonoBehaviour
 
     // Object pool of tiles: set to 128 for efficiency.
     private readonly GameObject[] tilePool = new GameObject[128];
-    // Points to the next-selected tile in the tile pool, to allow reuse of the tile objects in the pool.
+    // Points to the next-selected tile in the tile pool, to allow reuse of the tile objects in the pool. Byte used for maximum storage efficiency.
     private byte poolPointer = 0;
 
     // Delay between generating a new floor tile. Int value represents the number of frames in-between each tile generation.
     private int floorDrawDelay = 5;
-
     // Holds the current y position for generating floor tiles. Varies throughout game play to create uneven terrain.
     private int CurrentFloorYPos = -70;
+    // Time (in seconds) to forcefully prevent terrain from changing height.
+    private float DrawFlatTerrainTimer = 2.0f;
 
     // Spawn width (x) position for all tiles and enemies, just outside of the camera's view.
     private const float SPAWNPOINT_WIDTH = 550.0f;
 
-    private float DrawFlatTerrainTimer = 2.0f;
-
     private void Start()
     {
+        // For each tile in the tile pool:
+        // - Instantiate the object,
+        // - Attach the FloorUpdate script, which controls it's movement.
+        // - Set it's initial position to the standard y position and it's x position moving up from the start to the end of the screen
+        //   to populate the screen with terrain on game start.
         for (var i = 0; i < tilePool.Length; i++)
         {
             tilePool[i] = Instantiate(floorTile, new Vector3(-1, -1, 0), Quaternion.identity);
             tilePool[i].AddComponent<FloorUpdate>();
+            tilePool[i].transform.position = new Vector3(i*4.5f, CurrentFloorYPos, 0);
         }
 
         // Force FPS to be at 60FPS to (try) to keep dt values consistent, so that the floor tiles don't move out of position from a sudden change in
