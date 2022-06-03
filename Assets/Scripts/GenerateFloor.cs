@@ -29,6 +29,8 @@ public class GenerateFloor : MonoBehaviour
     // Spawn width (x) position for all tiles and enemies, just outside of the camera's view.
     private const float SPAWNPOINT_WIDTH = 550.0f;
 
+    private float DrawFlatTerrainTimer = 2.0f;
+
     private void Start()
     {
         for (var i = 0; i < tilePool.Length; i++)
@@ -52,6 +54,7 @@ public class GenerateFloor : MonoBehaviour
         }
 
         floorDrawDelay--;
+        DrawFlatTerrainTimer -= Time.deltaTime;
     }
 
     // Summon a new floor tile object from the object pool.
@@ -67,20 +70,30 @@ public class GenerateFloor : MonoBehaviour
 
     private void CalculateNewYPos()
     {
-        // Random number generator between 0 and 10. If the value returned is 0, the terrain will shift downwards, if the value is 10, the terrain will
-        // shift upwards, otherwise (1-9) terrain stays at the same elevation. All in all, 20% chance per floor tile spawn to adjust terrain height, with equal weighting
-        // for it going up or down (10% each).
-        switch(UnityEngine.Random.Range(0, 11))
+        if (DrawFlatTerrainTimer < 0.0f)
         {
-            case 0:
-                if (CurrentFloorYPos <= -100) break;
-                CurrentFloorYPos -= 5;
-                break;
-                
-            case 5:
-                if (CurrentFloorYPos >= -70) break;
-                CurrentFloorYPos += 5;
-                break;
+            // Random number generator between 0 and 10. If the value returned is 0, the terrain will shift downwards, if the value is 10, the terrain will
+            // shift upwards, otherwise (1-9) terrain stays at the same elevation. All in all, 20% chance per floor tile spawn to adjust terrain height, with equal weighting
+            // for it going up or down (10% each).
+            switch (UnityEngine.Random.Range(0, 11))
+            {
+                case 0:
+                    if (CurrentFloorYPos <= -100) break;
+                    CurrentFloorYPos -= 5;
+                    break;
+
+                case 10:
+                    if (CurrentFloorYPos >= -70) break;
+                    CurrentFloorYPos += 5;
+                    break;
+            }
         }
+    }
+
+    // Called by enemy manager when a ground-based enemy is about to spawn to ensure terrain is smooth temporarily so the enemy does not
+    // clip into the ground from potentially uneven terrain.
+    public void DrawFlatTerrain()
+    {
+        DrawFlatTerrainTimer = 3.0f;
     }
 }
