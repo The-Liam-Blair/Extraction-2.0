@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
 
-// TODO CHECKLIST:
-// --> Terrain generated at start of the game fully rather than wait for terrain to fill up the screen -- Required.
-// --> Random Chance to create a specific terrain type, such as a hill, mountain range, or flat lands -- Optional.
-// --> Sloped terrain (If terrain moves up/down, change from a rigid square to triangular shape to create smoothness, chance based etc) -- Optional.
+// Saves on using 'UnityEngine.Random.Range' every time the random function is used.
+// Note: The first value is inclusive, the second value is exclusive: Random.Range(inclusiveMin, exclusiveMax);
+using Random = UnityEngine.Random;
 
 public class GenerateFloor : MonoBehaviour
 {
@@ -21,12 +20,17 @@ public class GenerateFloor : MonoBehaviour
     // Delay between generating a new floor tile. Int value represents the number of frames in-between each tile generation.
     private int floorDrawDelay = 5;
     // Holds the current y position for generating floor tiles. Varies throughout game play to create uneven terrain.
-    private int CurrentFloorYPos = -70;
-    // Time (in seconds) to forcefully prevent terrain from changing height.
-    private float DrawFlatTerrainTimer = 2.0f;
+    private int CurrentFloorYPos = -90;
 
     // Spawn width (x) position for all tiles and enemies, just outside of the camera's view.
     private const float SPAWNPOINT_WIDTH = 550.0f;
+
+    // Timer that checks if a hill is being drawn currently. Negative/0.0 indicates no hill is being drawn.
+    // >4.0 indicates an upward slope is being drawn, while <4.0 indicates a downward slope is being drawn.
+    private float HillTerrainTimer = 0.0f;
+    // Timer that prevents the height of terrain from changing. Used normally to set a small flat piece of land to spawn an enemy without it clipping
+    // into the ground.
+    private float FlatTerrainTimer = 0.0f;
 
     private void Start()
     {
@@ -52,18 +56,36 @@ public class GenerateFloor : MonoBehaviour
     {
         if (floorDrawDelay <= 0)
         {
+            // Roll 1/100 chance to draw a hill.
+            switch (Random.Range(0, 101))
+            {
+                case 0:
+                    // Standard duration to draw a full hill is 8 seconds, +/- 2 (6-10 seconds) to make hills more varied and lopsided (As hill down slope draw
+                    // time is always 4 seconds. For example, a 6 second hill will have 2 seconds to draw the uphill then 4 seconds to draw the downhill).
+                    HillTerrainTimer = 8.0f + Random.Range(-2, 5);
+                    break;
+            }
             DrawNewFloorTile();
             floorDrawDelay = 5;
         }
-
+        // Decrement floor draw delay by 1 frame (For more precision to generate floor tiles consistently rather than use dt).
         floorDrawDelay--;
-        DrawFlatTerrainTimer -= Time.deltaTime;
+
+        // Decrement hill draw duration and flat terrain draw duration by dt.
+        FlatTerrainTimer -= Time.deltaTime;
+        HillTerrainTimer -= Time.deltaTime;
     }
 
-    // Summon a new floor tile object from the object pool.
+    /// <summary>
+    /// Teleport the oldest terrain tile from the tile pool and 'reactivate' it by teleporting it back to the right of the screen.
+    /// <br>Also calls <see cref="CalculateNewYPos"/> to calculate a new y position to assign to this reactivated piece of terrain.</br>
+    /// </summary>
     private void DrawNewFloorTile()
     {
+        // Calculate the next height value for this piece of terrain.
         CalculateNewYPos();
+        // Teleport the terrain last in the pool queue to just outside the screen boundary on the right side with the new calculated height value,
+        // reactivating the terrain from the pool and making it move leftwards again.
         tilePool[poolPointer].transform.position = new Vector3(SPAWNPOINT_WIDTH, CurrentFloorYPos, 0);
         poolPointer++;
 
@@ -71,32 +93,79 @@ public class GenerateFloor : MonoBehaviour
         if (poolPointer == tilePool.Length) { poolPointer = 0; }
     }
 
+
+    /// <summary>
+    /// Determine the next y position of the tile being reused and reactivated. <para></para>
+    /// <br>If hill drawing is enabled (<paramref name="HillTerrainTimer"></paramref> > 0.0) then <see cref="GenerateHillsTerrain"/> is called.</br>
+    /// <br>If flatlands drawing is enabled (<paramref name="FlatTerrainTimer"></paramref> > 0.0) then <see cref="GenerateFlatTerrain"/> is called.</br>
+    /// <br>Otherwise, <see cref="GenerateRandomTerrain"/> is called.</br>
+    /// </summary>
     private void CalculateNewYPos()
     {
-        if (DrawFlatTerrainTimer < 0.0f)
+        // Hills terrain: Draw an upward slope. After either the height level is reached or after 1 second, draw a downward slope.
+        // Can also create terrain such as cliff edges if the height level is already at the upper height limit.
+        if (HillTerrainTimer > 0.0f)
         {
-            // Random number generator between 0 and 10. If the value returned is 0, the terrain will shift downwards, if the value is 10, the terrain will
-            // shift upwards, otherwise (1-9) terrain stays at the same elevation. All in all, 20% chance per floor tile spawn to adjust terrain height, with equal weighting
-            // for it going up or down (10% each).
-            switch (UnityEngine.Random.Range(0, 11))
+            if (FlatTerrainTimer > 0.0f)
             {
-                case 0:
-                    if (CurrentFloorYPos <= -100) break;
-                    CurrentFloorYPos -= 5;
-                    break;
-
-                case 10:
-                    if (CurrentFloorYPos >= -70) break;
-                    CurrentFloorYPos += 5;
-                    break;
+                return;
             }
+            GenerateHillsTerrain();
+        }
+        GenerateRandomTerrain();
+    }
+
+    /// <summary>
+    /// Generate a completely random height value. Creates bumps and rough terrain.
+    /// <para>Called when neither a hill or flat lands is being created. </para>
+    /// </summary>
+    private void GenerateRandomTerrain()
+    {
+        // Random number generator between 0 and 5. If the value returned is 0, the terrain will shift downwards, if the value is 5, the terrain will
+        // shift upwards, otherwise (1-4) terrain stays at the same elevation. All in all, 40% chance per floor tile spawn to adjust terrain height, with equal weighting
+        // for it going up or down (20% each).
+        // Note that the actual height change is extremely small, so this will mostly create rough, small bumps in the ground. Hills terrain (above) produce more drastic
+        // effects to the terrain.
+        switch (Random.Range(0, 6))
+        {
+            case 0:
+                if (CurrentFloorYPos <= -150) break;
+                CurrentFloorYPos -= 1;
+                break;
+
+            case 5:
+                if (CurrentFloorYPos >= -60) break;
+                CurrentFloorYPos += 1;
+                break;
         }
     }
 
-    // Called by enemy manager when a ground-based enemy is about to spawn to ensure terrain is smooth temporarily so the enemy does not
-    // clip into the ground from potentially uneven terrain.
-    public void DrawFlatTerrain()
+    /// <summary>
+    /// Generate a height value according to the <paramref name="HillTerrainTimer"/> value. Creates hills and slopes.<para></para>
+    /// <br>If <paramref name="HillTerrainTimer"/> > 4.0: Generate upward slope.</br>
+    /// <br>Else if <paramref name="HillTerrainTimer"/> > 0.0: Generate downward slope. (Between 0.0 and 4.0)</br>
+    /// <br>Else (<paramref name="HillTerrainTimer"/> is negative): Hill is not being drawn.</br>
+    /// </summary>
+    private void GenerateHillsTerrain()
     {
-        DrawFlatTerrainTimer = 3.0f;
+        // These two lines build the hill. The first line controls the downward slope of the hill (which runs after the hill has been going upwards
+        // for 4 seconds, or halfway done) so perform the downward slope to complete the hill. The second line builds the upward portion of the slope
+        // with a check to ensure it does not go too high up.
+        if (HillTerrainTimer <= 4.0f && CurrentFloorYPos >= -130) { CurrentFloorYPos -= Random.Range(-1, 4); }
+        else if (CurrentFloorYPos <= -70) { CurrentFloorYPos += Random.Range(-1, 4); }
+
+        // Calls the standard random terrain method. This can only be invoked if the current terrain height is out of bounds for generating a hill
+        // (Hills have a boundary of -70 < y < -130, while terrain generation has a boundary of -60 < y < -150).
+        else { GenerateRandomTerrain(); }
+    }
+
+
+    /// <summary>
+    /// Generate purposely flat terrain. Overrides the creation of all other terrain, as it's normally used to prepare terrain for an enemy structure or weapon
+    /// to sit on.
+    /// </summary>
+    public void GenerateFlatTerrain()
+    {
+        FlatTerrainTimer = 3.0f;
     }
 }
