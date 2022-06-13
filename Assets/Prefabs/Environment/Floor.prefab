@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6674986475719830871}
   - component: {fileID: 831840979436326382}
   - component: {fileID: -4730227164353876959}
+  - component: {fileID: -4324199088021903106}
   m_Layer: 0
   m_Name: Floor
   m_TagString: Terrain
@@ -131,3 +132,15 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 7
+--- !u!114 &-4324199088021903106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2768124974018945198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e479825241907014ebfd3dff4ebced4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

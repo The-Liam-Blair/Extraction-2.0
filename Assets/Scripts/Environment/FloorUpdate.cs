@@ -6,9 +6,10 @@ public class FloorUpdate : MonoBehaviour
 {
     void Update()
     {
-        // If the object is in the inactive state (x position is -1 or x position is beyond the camera range), do not move the object.
-        // Tile will be teleported to a valid position when it's needed, so will be 'active' and will move.
-        if (transform.position.x < 0.0)  { return; }
+        // If the floor tile reaches the leftmost screen boundary, set it inactive as it's no longer required currently.
+        // Once the tiles ahead of it have been exhausted and it's needed again to draw the next section of terrain, it will
+        // be set to active again.
+        if (transform.position.x < 0.0)  { gameObject.SetActive(false); }
         transform.Translate(-66f * Time.deltaTime, 0.0f, 0.0f);
     }
 }

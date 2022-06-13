@@ -54,6 +54,11 @@ public class PlayerMovement : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x, (float) CameraPositions.Top - playerSize.y, 0);
         }
+
+        if (Input.GetAxisRaw("PrimaryFire") > 0 && GetComponent<PlayerCombat>().GetCooldown() < 0.0f)
+        {
+            GetComponent<PlayerCombat>().GenerateProjectile();
+        }
     }
 
 

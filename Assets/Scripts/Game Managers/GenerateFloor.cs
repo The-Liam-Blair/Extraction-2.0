@@ -24,6 +24,11 @@ public class GenerateFloor : MonoBehaviour
 
     // Spawn width (x) position for all tiles and enemies, just outside of the camera's view.
     private const float SPAWNPOINT_WIDTH = 550.0f;
+    // Height value boundaries for both standard terrain and hills.
+    private const float TERRAIN_MAX_HEIGHT = -60;
+    private const float TERRAIN_MIN_HEIGHT = -150;
+    private const float HILLS_MAX_HEIGHT = -70;
+    private const float HILLS_MIN_HEIGHT = -130;
 
     // Timer that checks if a hill is being drawn currently. Negative/0.0 indicates no hill is being drawn.
     // >4.0 indicates an upward slope is being drawn, while <4.0 indicates a downward slope is being drawn.
@@ -36,15 +41,13 @@ public class GenerateFloor : MonoBehaviour
     {
         // For each tile in the tile pool:
         // - Calculate the new y position of the current tile. Used to generate initially uneven terrain rather than oddly flat terrain on level start.
-        // - Instantiate the object,
-        // - Attach the FloorUpdate script, which controls it's movement.
-        // - Set it's initial position to the standard y position and it's x position moving up from the start to the end of the screen
-        //   to populate the screen with terrain on game start.
+        // - Instantiate the object (with pre-attached update script to make it move).
+        // - Spread out each tile on the x axis, and randomly generate y axis using the standard random height generator to populate the game with 
+        //   an already-built ground.
         for (var i = 0; i < tilePool.Length; i++)
         {
             CalculateNewYPos();
             tilePool[i] = Instantiate(floorTile, new Vector3(-1, -1, 0), Quaternion.identity);
-            tilePool[i].AddComponent<FloorUpdate>();
             tilePool[i].transform.position = new Vector3(i*4.5f, CurrentFloorYPos, 0);
         }
 
@@ -79,16 +82,17 @@ public class GenerateFloor : MonoBehaviour
     }
 
     /// <summary>
-    /// Teleport the oldest terrain tile from the tile pool and 'reactivate' it by teleporting it back to the right of the screen.
+    /// Teleport the oldest terrain tile from the tile pool and reactivate it by teleporting it back to the right of the screen.
     /// <br>Also calls <see cref="CalculateNewYPos"/> to calculate a new y position to assign to this reactivated piece of terrain.</br>
     /// </summary>
     private void DrawNewFloorTile()
     {
         // Calculate the next height value for this piece of terrain.
         CalculateNewYPos();
-        // Teleport the terrain last in the pool queue to just outside the screen boundary on the right side with the new calculated height value,
-        // reactivating the terrain from the pool and making it move leftwards again.
+        // Teleport the terrain last in the pool queue (Which would be in an inactive state) to the rightmost section of the screen and set it active
+        // again to make it move again. Also increment the pointer that tracks the current position for the pool of terrain objects.
         tilePool[poolPointer].transform.position = new Vector3(SPAWNPOINT_WIDTH, CurrentFloorYPos, 0);
+        tilePool[poolPointer].SetActive(true);
         poolPointer++;
 
         // Reset tile pool pointer if it exceeds the array size.
@@ -131,12 +135,12 @@ public class GenerateFloor : MonoBehaviour
         switch (Random.Range(0, 6))
         {
             case 0:
-                if (CurrentFloorYPos <= -150) break;
+                if (CurrentFloorYPos <= TERRAIN_MIN_HEIGHT) break;
                 CurrentFloorYPos -= 1;
                 break;
 
             case 5:
-                if (CurrentFloorYPos >= -60) break;
+                if (CurrentFloorYPos >= TERRAIN_MAX_HEIGHT) break;
                 CurrentFloorYPos += 1;
                 break;
         }
@@ -153,8 +157,8 @@ public class GenerateFloor : MonoBehaviour
         // These two lines build the hill. The first line controls the downward slope of the hill (which runs after the hill has been going upwards
         // for 4 seconds, or halfway done) so perform the downward slope to complete the hill. The second line builds the upward portion of the slope
         // with a check to ensure it does not go too high up.
-        if (HillTerrainTimer <= 4.0f && CurrentFloorYPos >= -130) { CurrentFloorYPos -= Random.Range(-1, 4); }
-        else if (CurrentFloorYPos <= -70) { CurrentFloorYPos += Random.Range(-1, 4); }
+        if (HillTerrainTimer <= 4.0f && CurrentFloorYPos >= HILLS_MIN_HEIGHT) { CurrentFloorYPos -= Random.Range(-1, 4); }
+        else if (CurrentFloorYPos <= HILLS_MAX_HEIGHT) { CurrentFloorYPos += Random.Range(-1, 4); }
 
         // Calls the standard random terrain method. This can only be invoked if the current terrain height is out of bounds for generating a hill
         // (Hills have a boundary of -70 < y < -130, while terrain generation has a boundary of -60 < y < -150).
