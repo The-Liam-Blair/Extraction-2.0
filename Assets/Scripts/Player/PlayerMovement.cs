@@ -6,12 +6,14 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     //todo checklist:
-    // --> Referencing (soon to be made) attack script when the attack key is pressed.
     // --> (later in development) controls can be changed in a settings menu, reflected in this movement script.
 
 
     // Width and Height of the player.
     private Vector2 playerSize;
+
+    // Component that handles the firing and handling of the player's weapons.
+    private PlayerCombat pCombat;
 
     // Camera dimensions, better for readability when calling sides of the camera than using uninformative values.
     private enum CameraPositions
@@ -26,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
     {
         // Calculate the player's size from it's connected box collider component.
         playerSize = transform.GetComponent<BoxCollider2D>().size;
+        pCombat = GetComponent<PlayerCombat>();
     }
 
 
@@ -55,9 +58,11 @@ public class PlayerMovement : MonoBehaviour
             transform.position = new Vector3(transform.position.x, (float) CameraPositions.Top - playerSize.y, 0);
         }
 
-        if (Input.GetAxisRaw("PrimaryFire") > 0 && GetComponent<PlayerCombat>().GetCooldown() < 0.0f)
+        // Check if the player has pressed the primary fire key, and fire a bullet if so.
+
+        if (Input.GetAxisRaw("PrimaryFire") > 0 && pCombat.GetCooldown() < 0.0f)
         {
-            GetComponent<PlayerCombat>().GenerateProjectile();
+            GetComponent<PlayerCombat>().GenerateProjectile(transform.position);
         }
     }
 
