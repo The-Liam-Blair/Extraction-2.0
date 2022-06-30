@@ -14,7 +14,7 @@ public class PlayerBulletUpdate : MonoBehaviour
     private void OnEnable()
     {
         // Determine the new deviation value for this bullet when it is first fired.
-        yDeviation = Random.Range(-5f, 5f);
+        yDeviation = Random.Range(-6f, 6f);
     }
 
     private void OnDisable()

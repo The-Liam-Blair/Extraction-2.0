@@ -26,9 +26,9 @@ public class GenerateFloor : MonoBehaviour
     private const float SPAWNPOINT_WIDTH = 550.0f;
     // Height value boundaries for both standard terrain and hills.
     private const float TERRAIN_MAX_HEIGHT = -60;
-    private const float TERRAIN_MIN_HEIGHT = -150;
+    private const float TERRAIN_MIN_HEIGHT = -130;
     private const float HILLS_MAX_HEIGHT = -70;
-    private const float HILLS_MIN_HEIGHT = -130;
+    private const float HILLS_MIN_HEIGHT = -110;
 
     // Timer that checks if a hill is being drawn currently. Negative/0.0 indicates no hill is being drawn.
     // >4.0 indicates an upward slope is being drawn, while <4.0 indicates a downward slope is being drawn.
@@ -161,7 +161,7 @@ public class GenerateFloor : MonoBehaviour
         else if (CurrentFloorYPos <= HILLS_MAX_HEIGHT) { CurrentFloorYPos += Random.Range(-1, 4); }
 
         // Calls the standard random terrain method. This can only be invoked if the current terrain height is out of bounds for generating a hill
-        // (Hills have a boundary of -70 < y < -130, while terrain generation has a boundary of -60 < y < -150).
+        // (Hills have a boundary of -70 < y < -110, while terrain generation has a boundary of -60 < y < -130).
         else { GenerateRandomTerrain(); }
     }
 

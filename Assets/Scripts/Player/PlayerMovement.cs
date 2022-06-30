@@ -18,9 +18,9 @@ public class PlayerMovement : MonoBehaviour
     // Camera dimensions, better for readability when calling sides of the camera than using uninformative values.
     private enum CameraPositions
     {
-        Left = 15,
-        Right = 538,
-        Top = 95
+        Left = 38,
+        Right = 377,
+        Top = 121
     }
 
     

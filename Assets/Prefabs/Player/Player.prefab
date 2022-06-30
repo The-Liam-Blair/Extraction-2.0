@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca55d26974b20014388200d7ace7f194, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletProjectile: {fileID: 530210526588447664, guid: 4e78bcda13cb8d3459414d43667542ff, type: 3}
+  playerBullet: {fileID: 530210526588447664, guid: 4e78bcda13cb8d3459414d43667542ff, type: 3}
 --- !u!212 &8412445351368155778
 SpriteRenderer:
   m_ObjectHideFlags: 0
