@@ -4,35 +4,32 @@ using UnityEngine;
 
 public class PlayerBulletUpdate : MonoBehaviour
 {
-    // Right edge of the camera.
-    private const float cameraRight = 435f;
-
-    // Determines the deviation for each shot fired. Determined once, each time the bullet is enabled.
+    // Determines the deviation for each shot fired. Determined each time the bullet is enabled/fired.
     private float yDeviation;
 
     // Runs each time the object is activated.
     private void OnEnable()
     {
-        // Determine the new deviation value for this bullet when it is first fired.
+        // Determine the new deviation value for this bullet when it's fired. Changes every time the bullet is re-enabled.
         yDeviation = Random.Range(-6f, 6f);
     }
 
-    private void OnDisable()
+    private void OnBecameInvisible()
     {
-        transform.position = new Vector3(-1, -1, -1);
+        // When bullet is off-screen, disable it again so it cannot collide with objects off-screen and removes the need
+        // to update the projectile for efficiency.
+        gameObject.SetActive(false);
     }
 
     private void Update()
     {
-        // Projectile rapidly travels rightwards with deviation and gravity influence. When it reaches the right screen edge, it will be set as inactive
-        // as it is outside the game boundaries.
-        if (transform.position.x > cameraRight) { gameObject.SetActive(false); }
+        // Projectile rapidly travels rightwards with a set deviation. Also influenced by gravity from the rigidbody component.
         transform.Translate(100.0f * Time.deltaTime, yDeviation * Time.deltaTime, 0);
     }
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        // Bullet de-spawns when hitting terrain.
+        // Disable bullet on colliding with terrain.
         if(other.transform.tag == "Terrain") { gameObject.SetActive(false); }
     }
 }
