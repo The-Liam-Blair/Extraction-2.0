@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class PlayerMovement : MonoBehaviour
 
     // Component that handles the firing and handling of the player's weapons.
     private PlayerCombat pCombat;
+
+    private int health;
 
     // Camera dimensions, better for readability when calling sides of the camera than using uninformative values.
     private enum CameraPositions
@@ -29,6 +32,8 @@ public class PlayerMovement : MonoBehaviour
         // Calculate the player's size from it's connected box collider component.
         playerSize = transform.GetComponent<BoxCollider2D>().size;
         pCombat = GetComponent<PlayerCombat>();
+
+        health = 3;
     }
 
 
@@ -74,17 +79,13 @@ public class PlayerMovement : MonoBehaviour
             other.transform.tag.Equals("EnemyProjectile"))
         {
             // Collided with terrain
-            if (other.gameObject.tag.Equals("Terrain"))
-            {
-                // die
-            }
+            if (other.gameObject.tag.Equals("Terrain"))  { SceneManager.LoadScene("LoseGame"); }
             
-            // Collided with an enemy or one of it's projectiles.
-            else
+            // Collided with enemy or enemy projectile
+            else /* if tag == "Enemy" || tag == "EnemyProjectile" */
             {
-                {
-                    // lose 1 hp
-                }
+                health--;
+                if (health <= 0)  { SceneManager.LoadScene("LoseGame"); }
             }
         }
     }
