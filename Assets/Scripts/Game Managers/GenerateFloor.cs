@@ -50,14 +50,9 @@ public class GenerateFloor : MonoBehaviour
             tilePool[i] = Instantiate(floorTile, new Vector3(-1, -1, 0), Quaternion.identity);
             tilePool[i].transform.position = new Vector3(i*4.5f, CurrentFloorYPos, 0);
         }
-
-        // Force FPS to be at 60FPS to (try) to keep dt values consistent, so that the floor tiles don't move out of position from a sudden change in
-        // dt, resulting in gaps forming in the terrain.
-        // todo: stick this in appropriate loading or game state script.
-        Application.targetFrameRate = 60;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (floorDrawDelay <= 0)
         {
