@@ -18,6 +18,10 @@ public class PlayerMovement : MonoBehaviour
 
     private int health;
 
+    // Player is given temporary immunity to enemy projectile and ship collision damage after receiving damage from either of
+    // those sources. Colliding with terrain will always kill the player regardless.
+    private float invulnerableTimer;
+
     // Camera dimensions, better for readability when calling sides of the camera than using uninformative values.
     private enum CameraPositions
     {
@@ -32,7 +36,7 @@ public class PlayerMovement : MonoBehaviour
         // Calculate the player's size from it's connected box collider component.
         playerSize = transform.GetComponent<BoxCollider2D>().size;
         pCombat = GetComponent<PlayerCombat>();
-
+        
         health = 3;
     }
 
@@ -63,12 +67,16 @@ public class PlayerMovement : MonoBehaviour
             transform.position = new Vector3(transform.position.x, (float) CameraPositions.Top - playerSize.y, 0);
         }
 
+        
         // Check if the player has pressed the primary fire key, and fire a bullet if so.
 
         if (Input.GetAxisRaw("PrimaryFire") > 0 && pCombat.GetCooldown() < 0.0f)
         {
             GetComponent<PlayerCombat>().GenerateProjectile(transform.position);
         }
+
+        // Invulnerability decrements over time. Negative time means that it is inactive.
+        invulnerableTimer -= Time.deltaTime;
     }
 
 
@@ -81,9 +89,11 @@ public class PlayerMovement : MonoBehaviour
             // Collided with terrain
             if (other.gameObject.tag.Equals("Terrain"))  { SceneManager.LoadScene("LoseGame"); }
             
-            // Collided with enemy or enemy projectile
-            else /* if tag == "Enemy" || tag == "EnemyProjectile" */
+            // Collided with enemy or enemy projectile, resist damage if invulnerable.
+            else if (invulnerableTimer < 0f) /** && if tag == "Enemy" || tag == "EnemyProjectile" **/
             {
+                // Player is immune to all damage (Apart from colliding with terrain) for 2 seconds.
+                invulnerableTimer = 2f;
                 health--;
                 if (health <= 0)  { SceneManager.LoadScene("LoseGame"); }
             }
