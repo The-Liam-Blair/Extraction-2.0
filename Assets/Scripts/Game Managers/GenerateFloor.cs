@@ -49,6 +49,7 @@ public class GenerateFloor : MonoBehaviour
             CalculateNewYPos();
             tilePool[i] = Instantiate(floorTile, new Vector3(-1, -1, 0), Quaternion.identity);
             tilePool[i].transform.position = new Vector3(i*4.5f, CurrentFloorYPos, 0);
+            tilePool[i].transform.SetParent(GameObject.Find("_FLOOR").transform, true);
         }
     }
 

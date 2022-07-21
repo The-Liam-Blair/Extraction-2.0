@@ -35,6 +35,7 @@ public class PlayerCombat : MonoBehaviour
         {
             pBulletPool[i] = Instantiate(playerBullet, new Vector3(-1, -1, -1), Quaternion.identity);
             pBulletPool[i].SetActive(false);
+            pBulletPool[i].transform.SetParent(GameObject.Find("_PLAYERPROJECTILE").transform, true);
         }
 
         // Bullet template is no longer needed, so destroy the reference to the prefab.
