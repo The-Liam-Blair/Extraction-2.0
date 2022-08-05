@@ -37,28 +37,36 @@ public class GenerateEnemies : MonoBehaviour
         for (int i = 0; i < Enemies.Count; i++)
         {
             // Generate 5 game objects of that enemy type for the enemy pool.
+            // Because of how objects are instantiated, the enemies are created and grouped in order of appearance in the enemy prefab
+            // list.
             for (int j = 0; j < 5; j++)
             {
                 Enemies[i].Add(Instantiate(EnemyPrefabs[i], new Vector3(-1, -1, 0), Quaternion.identity));
                 Enemies[i][j].transform.SetParent(GameObject.Find("_ENEMYMANAGER").transform, true);
                 Enemies[i][j].SetActive(false);
+                Enemies[i][j].name = EnemyPrefabs[i].name + " [" + j + "]";
             }
         }
 
         // Really crap method of attaching the correct enemy script to each enemy.
         // Also sets cooldown required for each enemy.
+        //
+        // Like the enemy pool, the cooldowns list is populated in order of the enemy prefabs list, which means it will
+        // match the ordering of the enemy pool.
         for (int k = 0; k < Enemies.Count; k++)
         {
             EnemySpawnPointers.Add(0);
 
             switch (EnemyPrefabs[k].name)
             {
-                // Mine enemy that spawns every 4 seconds.
+                // If the enemy was a mine...
                 case "Mine":
+                    // Add 5 mine enemies to the enemy pool...
                     for (int j = 0; j < 5; j++)
                     {
                         Enemies[k][j].AddComponent<EnemyMine>();
                     }
+                    // And add the cooldown interval to spawn this mine enemy to the list of enemy spawn cooldowns. (in this case, 4 seconds).
                     EnemySpawnCooldowns.Add(4);
                     EnemySpawnCooldownsReset.Add(4);
                     break;
@@ -70,7 +78,7 @@ public class GenerateEnemies : MonoBehaviour
 
     private void Update()
     {
-        // Update player position getter
+        // Update property that tracks the player's position.
         playerPos = GameObject.Find("Player").transform.position;
 
         // For each enemy type...

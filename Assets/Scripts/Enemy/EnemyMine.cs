@@ -5,25 +5,20 @@ using UnityEngine;
 // Implementation of the mine enemy, a large floating mine that explodes when destroyed.
 public class EnemyMine : Enemy
 {
+    // Right-Most side of the screen + 70 units further to the right so that they don't visually teleport in, but travel from the right of the screen fully.
+    private int CameraRight = 430;
 
-    // Start is called before the first frame update
+    // When object is active again, re-initialise it's properties.
     public override void OnEnable()
     {
         Health = 10;
         Speed = 50;
         ScoreOnDeath = 100;
-        Cooldown = 4;
-        transform.position = new Vector3(370, 40, 0);
+        transform.position = new Vector3(CameraRight, 40, 0);
     }
 
-    // Update is called once per frame
     public override void Update()
     {
-        transform.Translate(-Speed * Time.deltaTime, 0, 0);
-    }
-
-    void OnBecameInvisible()
-    {
-        gameObject.SetActive(false);
+        MoveLeft();
     }
 }

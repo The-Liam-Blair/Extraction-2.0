@@ -20,15 +20,20 @@ public class PlayerCombat : MonoBehaviour
     // Bullet template
     [SerializeField] private GameObject playerBullet;
 
-    // Object pool of tiles: set to 128 for efficiency.
+    // Object pool of tiles and pointer for it.
     private readonly GameObject[] pBulletPool = new GameObject[64];
     private byte pBulletPointer = 0;
 
-    private float cooldown;
+    // Cooldown determines the fire rate of the player's weapon.
+    public float cooldown
+    {
+        get;
+        private set;
+    }
 
     private void Start()
     {
-        cooldown = 0.33f;
+        cooldown = 0.15f;
 
         // Initialize the player bullet pool to an offscreen position in the inactive state.
         for (int i = 0; i < pBulletPool.Length; i++)
@@ -36,10 +41,8 @@ public class PlayerCombat : MonoBehaviour
             pBulletPool[i] = Instantiate(playerBullet, new Vector3(-1, -1, -1), Quaternion.identity);
             pBulletPool[i].SetActive(false);
             pBulletPool[i].transform.SetParent(GameObject.Find("_PLAYERPROJECTILE").transform, true);
+            pBulletPool[i].name = playerBullet.name + " [" + i + "]";
         }
-
-        // Bullet template is no longer needed, so destroy the reference to the prefab.
-        playerBullet = null;
     }
 
     private void Update()
@@ -47,22 +50,18 @@ public class PlayerCombat : MonoBehaviour
         cooldown -= Time.deltaTime;
     }
 
+    // Can only be called from the PlayerMovement script, a projectile is fired by the player.
     public void GenerateProjectile(Vector3 playerPos)
     {
         // Select the next bullet within the bullet pool, reset it's position to the player's position and fire it (set it active).
         // Increment the pointer for the bullet pool to prepare for the next bullet to be fired.
         pBulletPool[pBulletPointer].transform.position = playerPos;
         pBulletPool[pBulletPointer].SetActive(true);
+        
         pBulletPointer++;
         if(pBulletPointer >= pBulletPool.Length) { pBulletPointer = 0; }
         
         // 0.15s cooldown per shot (Between 6 and 7 shots per second).
         cooldown = 0.15f;
-    }
-
-    public float GetCooldown()
-    {
-        return cooldown;
-
     }
 }

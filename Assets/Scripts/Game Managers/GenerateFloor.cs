@@ -50,14 +50,17 @@ public class GenerateFloor : MonoBehaviour
             tilePool[i] = Instantiate(floorTile, new Vector3(-1, -1, 0), Quaternion.identity);
             tilePool[i].transform.position = new Vector3(i*4.5f, CurrentFloorYPos, 0);
             tilePool[i].transform.SetParent(GameObject.Find("_FLOOR").transform, true);
+            tilePool[i].name = "FloorTile [" + i + "]";
         }
     }
 
+    // FixedUpdate used so that tile generation is not affected by frame rate.
     private void FixedUpdate()
     {
+        // When the interval for drawing a new section of the floor has expired...
         if (floorDrawDelay <= 0)
         {
-            // Roll 1/100 chance to draw a hill.
+            // Roll 1/100 chance to draw a hill. If successful, add time to the hill draw timer.
             switch (Random.Range(0, 101))
             {
                 case 0:
@@ -66,10 +69,11 @@ public class GenerateFloor : MonoBehaviour
                     HillTerrainTimer = 8.0f + Random.Range(-2, 5);
                     break;
             }
+            // Run the floor tile generation function and reset the floor interval timer.
             DrawNewFloorTile();
             floorDrawDelay = 5;
         }
-        // Decrement floor draw delay by 1 frame (For more precision to generate floor tiles consistently rather than use dt).
+        // Decrement the delay timer by 1 frame (So a new floor tile is drawn every 5 frames).
         floorDrawDelay--;
 
         // Decrement hill draw duration and flat terrain draw duration by dt.
@@ -104,16 +108,19 @@ public class GenerateFloor : MonoBehaviour
     /// </summary>
     private void CalculateNewYPos()
     {
-        // Hills terrain: Draw an upward slope. After either the height level is reached or after 1 second, draw a downward slope.
-        // Can also create terrain such as cliff edges if the height level is already at the upper height limit.
+        // If the hill terrain timer is positive...
         if (HillTerrainTimer > 0.0f)
         {
+            // But the flat terrain timer is also positive...
             if (FlatTerrainTimer > 0.0f)
             {
+                // Flat terrain timer overrides all, so do not adjust the terrain height.
                 return;
             }
+            // Only hill terrain timer is positive, so use the hill terrain generation function.
             GenerateHillsTerrain();
         }
+        // Neither hill or flat terrain timer is positive, so draw random terrain.
         GenerateRandomTerrain();
     }
 
@@ -126,16 +133,17 @@ public class GenerateFloor : MonoBehaviour
         // Random number generator between 0 and 5. If the value returned is 0, the terrain will shift downwards, if the value is 5, the terrain will
         // shift upwards, otherwise (1-4) terrain stays at the same elevation. All in all, 40% chance per floor tile spawn to adjust terrain height, with equal weighting
         // for it going up or down (20% each).
-        // Note that the actual height change is extremely small, so this will mostly create rough, small bumps in the ground. Hills terrain (above) produce more drastic
-        // effects to the terrain.
+        // Note that the actual height change is extremely small, so this will mostly create rough, small bumps in the ground.
         switch (Random.Range(0, 6))
         {
             case 0:
+                // If the terrain is out of bounds, don't adjust the height.
                 if (CurrentFloorYPos <= TERRAIN_MIN_HEIGHT) break;
                 CurrentFloorYPos -= 1;
                 break;
 
             case 5:
+                // If the terrain is out of bounds, don't adjust the height.
                 if (CurrentFloorYPos >= TERRAIN_MAX_HEIGHT) break;
                 CurrentFloorYPos += 1;
                 break;
@@ -150,14 +158,14 @@ public class GenerateFloor : MonoBehaviour
     /// </summary>
     private void GenerateHillsTerrain()
     {
-        // These two lines build the hill. The first line controls the downward slope of the hill (which runs after the hill has been going upwards
-        // for 4 seconds, or halfway done) so perform the downward slope to complete the hill. The second line builds the upward portion of the slope
+        // These two lines sets the hill height value. The first line controls the downward slope of the hill (which runs after the hill has been going upwards
+        // for 4 seconds, or halfway done) so it performs the downward slope to complete the hill. The second line builds the upward portion of the slope
         // with a check to ensure it does not go too high up.
         if (HillTerrainTimer <= 4.0f && CurrentFloorYPos >= HILLS_MIN_HEIGHT) { CurrentFloorYPos -= Random.Range(-1, 4); }
         else if (CurrentFloorYPos <= HILLS_MAX_HEIGHT) { CurrentFloorYPos += Random.Range(-1, 4); }
 
         // Calls the standard random terrain method. This can only be invoked if the current terrain height is out of bounds for generating a hill
-        // (Hills have a boundary of -70 < y < -110, while terrain generation has a boundary of -60 < y < -130).
+        // (Hills have a boundary of -70 < y < -110, while overall terrain generation has a boundary of -60 < y < -130).
         else { GenerateRandomTerrain(); }
     }
 
