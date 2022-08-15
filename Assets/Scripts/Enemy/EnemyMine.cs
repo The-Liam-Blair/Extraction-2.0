@@ -5,9 +5,6 @@ using UnityEngine;
 // Implementation of the mine enemy, a large floating mine that explodes when destroyed.
 public class EnemyMine : Enemy
 {
-    // Right-Most side of the screen + 70 units further to the right so that they don't visually teleport in, but travel from the right of the screen fully.
-    private int CameraRight = 430;
-
     // When object is active again, re-initialise it's properties.
     public override void OnEnable()
     {
@@ -20,5 +17,12 @@ public class EnemyMine : Enemy
     public override void Update()
     {
         MoveLeft();
+    }
+
+    // Example, temporary implementation of explode.
+    public override void Explode()
+    {
+        gameObject.SetActive(false);
+        Debug.Log("ouch");
     }
 }

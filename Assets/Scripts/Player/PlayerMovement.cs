@@ -70,7 +70,7 @@ public class PlayerMovement : MonoBehaviour
         
         // Check if the player has pressed the primary fire key, and fire a bullet if so.
 
-        if (Input.GetAxisRaw("PrimaryFire") > 0 && pCombat.cooldown < 0.0f)
+        if (Input.GetAxisRaw("PrimaryFire") > 0 && pCombat.Cooldown < 0.0f)
         {
             GetComponent<PlayerCombat>().GenerateProjectile(transform.position);
         }

@@ -29,7 +29,7 @@ public class PlayerBulletUpdate : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        // Disable bullet on colliding with terrain.
-        if(other.transform.tag == "Terrain") { gameObject.SetActive(false); }
+        // Disable bullet on colliding with terrain or an enemy.
+        if(other.transform.tag == "Terrain" || other.transform.tag == "Enemy") { gameObject.SetActive(false); }
     }
 }

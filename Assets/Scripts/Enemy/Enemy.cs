@@ -9,10 +9,10 @@ public abstract class Enemy : MonoBehaviour
     public int Health
     {
         get;
-        protected set;
+        protected set; // Protected: Only the derived enemy classes can set their own health points. Getter is still public however.
     }
 
-    // Movement speed multiplier of the enemy. (Speed is calculated as Speed * dt).
+    // Movement speed multiplier of the enemy. (The actual, final movement speed of enemies is calculated as Speed * dt).
     protected int Speed
     {
         get;
@@ -23,7 +23,7 @@ public abstract class Enemy : MonoBehaviour
     public int ScoreOnDeath
     {
         get;
-        protected set; // Protected: Only the derived enemy classes can set their on score. Getter is still public however.
+        protected set; // Protected: Only the derived enemy classes can set their own score. Getter is still public however.
     }
 
     // Right-Most side of the screen + 70 units further to the right, to serve as the enemy spawn point on the x axis.
@@ -35,13 +35,31 @@ public abstract class Enemy : MonoBehaviour
     
     public virtual void Update() {}
     
-    // De-activate the object if it leaves the screen boundaries
-    void OnBecameInvisible()
+    // De-activate the object if it leaves the screen boundaries.
+    protected void OnBecameInvisible()
     {
-        // Don't deactivate objects on the rightmost side of the screen, which have just respawned.
+        // Don't deactivate objects on the rightmost side of the screen, which have just re-spawned.
         if (transform.position.x > 370) { return; }
 
         gameObject.SetActive(false);
+    }
+
+    // Handle collisions with other entities.
+    protected void OnCollisionEnter2D(Collision2D other)
+    {
+        // If collided with a player's projectile, inflict projectile damage to that enemy.
+        if (other.gameObject.tag == "PlayerProjectile")
+        {
+            Health -= GameObject.Find("Player").GetComponent<PlayerCombat>().Damage;
+
+        }
+        
+        // After the (potential) bullet collision handling, destroy the enemy if it's health was set to or below 0 from being shot or if it
+        // collided with the terrain or the player.
+        if (Health <= 0 || other.gameObject.tag == "Player" || other.gameObject.tag == "Terrain")
+        {
+            Explode();
+        }
     }
 
 
@@ -49,6 +67,15 @@ public abstract class Enemy : MonoBehaviour
     // the player flying through the level.
     protected void MoveLeft() { transform.Translate(-Speed * Time.deltaTime, 0 ,0);}
 
-    // If the enemy collides with the player or is defeated, they will explode, potentially inflicting damage to anything nearby it.
+
+    // Each enemy defines it's own explosion as each enemy's explosion is unique.
+    /// (after-thought: make each enemy store an animation clip of their explosion and make the base explosion function implement this for all
+    /// enemies).
+    //
+    // For each enemy's derived and implemented explosion:
+    // - Get and play the explode animation from the animation manager.
+    // - Adjust the hitbox/collider to fit the explosion radius. (Dynamically?)
+    // - Get the frame-count of the animation and set the enemy to inactive once the explosion
+    //   animation fully plays (Count each frame until it's equal to animation time or use some magic unity pre-defined function :) ).
     public virtual void Explode() {}
 }
