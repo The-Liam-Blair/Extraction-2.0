@@ -48,25 +48,20 @@ public class GenerateEnemies : MonoBehaviour
             }
         }
 
-        // Really crap method of attaching the correct enemy script to each enemy.
-        // Also sets cooldown required for each enemy.
+        // Really crap method of setting the spawning cooldown required for each enemy.
         //
         // Like the enemy pool, the cooldowns list is populated in order of the enemy prefabs list, which means it will
         // match the ordering of the enemy pool.
-        for (int k = 0; k < Enemies.Count; k++)
+        for (int i = 0; i < Enemies.Count; i++)
         {
             EnemySpawnPointers.Add(0);
 
-            switch (EnemyPrefabs[k].name)
+            switch (EnemyPrefabs[i].name)
             {
                 // If the enemy was a mine...
                 case "Mine":
-                    // Add 5 mine enemies to the enemy pool...
-                    for (int j = 0; j < 5; j++)
-                    {
-                        Enemies[k][j].AddComponent<EnemyMine>();
-                    }
-                    // And add the cooldown interval to spawn this mine enemy to the list of enemy spawn cooldowns. (in this case, 4 seconds).
+                    // Add the cooldown interval to spawn this mine enemy to the list of enemy spawn cooldowns. (in this case, 4 seconds).
+                    // SpawnCooldowns is the current cooldown timer, SpawnCooldownsReset is the 'reset' value which the spawn variable is set to after spawning an enemy.
                     EnemySpawnCooldowns.Add(4);
                     EnemySpawnCooldownsReset.Add(4);
                     break;
@@ -96,16 +91,19 @@ public class GenerateEnemies : MonoBehaviour
                 // player, while turrets may be situated on the ground).
                 Enemies[i][EnemySpawnPointers[i]].SetActive(true);
                 
+                // Increment the pool pointer and reset it's position if it overflows.
                 EnemySpawnPointers[i]++;
                 if (EnemySpawnPointers[i] > 4)
                 {
                     EnemySpawnPointers[i] = 0;
                 }
                 
+                // Reset spawn cooldown to the reset value.
                 EnemySpawnCooldowns[i] = EnemySpawnCooldownsReset[i];
             }
         }
 
+        // For each enemy type, decrement it's spawn timer by dt.
         for (int i = 0; i < EnemySpawnCooldowns.Count; i++)
         {
             EnemySpawnCooldowns[i] -= Time.deltaTime;
