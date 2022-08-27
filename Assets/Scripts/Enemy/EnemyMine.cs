@@ -20,7 +20,7 @@ public class EnemyMine : Enemy
 
     public override void Update() { MoveLeft(); }
 
-    // When exploding, adjust the box collider to match the explosion radius (approximately) and call the base function to play the animation.
+    // When exploding, adjust the box collider to match the explosion radius (approximately) and call the base function for general post-explosion events.
     public override void Explode()
     {
         base.Explode();

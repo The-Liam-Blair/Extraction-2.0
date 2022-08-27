@@ -177,20 +177,20 @@ public abstract class Enemy : MonoBehaviour
         if (!isExploding)
         {
 
-            // If collided with a player's projectile, inflict projectile damage to that enemy.
+            // If collided with a player's projectile, inflict projectile damage to that enemy. If this attack was fatal, the
+            // enemy explodes. Otherwise, it is only hurt.
             if (other.gameObject.tag == "PlayerProjectile")
             {
                 Health -= GameObject.Find("Player").GetComponent<PlayerCombat>().Damage;
-                //todo: red flash/indication of damage per instance of non-lethal damage taken.
-
+                
+                if (Health <= 0) { Explode(); }
+                else { Hurt(); }
             }
-            
-            // If health reaches 0 or colliding wth insta-kill objects (player/terrain), explode.
-            // Set exploding bool to true to prevent future collisions from re-running the Explode() function (which controls animation handling).
-            if (Health <= 0 || other.gameObject.tag == "Player" || other.gameObject.tag == "Terrain")
+
+            // If collided with the player itself or terrain, the enemy explodes regardless of it's hp.
+            else if (other.gameObject.tag == "Player" || other.gameObject.tag == "Terrain")
             {
                 Explode();
-                isExploding = true;
             }
         }
     }
@@ -207,9 +207,13 @@ public abstract class Enemy : MonoBehaviour
     //
     // Each enemy has a derived Explode() function but will always call this base function to play the exploding animation. The
     // derived animations are to modify components during explosions, such as the collision.
-    public virtual void Explode() { GetComponent<Animator>().Play("Explode"); }
+    public virtual void Explode() { isExploding = true; GetComponent<Animator>().Play("Explode"); }
 
     
-    // Called when an enemy's explosion animation completes: disable the enemy.
+    // Called by the animator component when an enemy's explosion animation completes: disable the enemy.
     public void OnExplodeEnd() { gameObject.SetActive(false); }
+
+    // Enemy has taken non-fatal damage when this is called, so an animation plays that very quickly places a red tint on the 
+    // enemy sprite to signify that it has taken damage.
+    public void Hurt() { GetComponent<Animator>().Play("Hurt"); }
 }

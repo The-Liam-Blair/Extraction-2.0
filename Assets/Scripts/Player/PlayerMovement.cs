@@ -92,11 +92,30 @@ public class PlayerMovement : MonoBehaviour
             // Collided with enemy or enemy projectile, resist damage if invulnerable.
             else if (invulnerableTimer < 0f) /** && if tag == "Enemy" || tag == "EnemyProjectile" **/
             {
-                // Player is immune to all damage (Apart from colliding with terrain) for 2 seconds.
-                invulnerableTimer = 2f;
+                // If fatal damage, go to lose game scene.
                 health--;
-                if (health <= 0)  { SceneManager.LoadScene("LoseGame"); }
+                if (health <= 0) { SceneManager.LoadScene("LoseGame"); }
+
+                // Else, player becomes immune to all damage for a period of time (Except collisions with terrain) and flashes during this time frame.
+                invulnerableTimer = 5.25f;
+                StartCoroutine(InvulnerableVisual());
             }
         }
+    }
+
+    // CO-ROUTINE
+    // Player flashes 3 times when injured, where the sprite's opacity is lowered massively 3 times, with a delay between each transition.
+    // Total time spent invulnerable is 5.25 seconds.
+    IEnumerator InvulnerableVisual()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.125f);
+            yield return new WaitForSeconds(0.75f);
+            gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
+            yield return new WaitForSeconds(1f);
+        }
+
+        yield return null;
     }
 }
