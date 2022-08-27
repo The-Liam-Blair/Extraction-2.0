@@ -11,7 +11,8 @@ public class EnemyMine : Enemy
         Health = 10;
         Speed = 25;
         ScoreOnDeath = 100;
-        transform.position = new Vector3(CameraRight, 40, 0);
+        // Mines spawn aligned with the player on the y-axis, with some variance for randomness.
+        transform.position = new Vector3(CameraRight, GameObject.Find("Player").transform.position.y + Random.Range(-10f, 10f), 0);
         isExploding = false;
 
         // Reset box collider back to it's initial, non-exploded value.

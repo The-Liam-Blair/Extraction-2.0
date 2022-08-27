@@ -36,10 +36,10 @@ public class GenerateEnemies : MonoBehaviour
         // For each enemy type...
         for (int i = 0; i < Enemies.Count; i++)
         {
-            // Generate 5 game objects of that enemy type for the enemy pool.
+            // Generate 16 game objects of that enemy type for the enemy pool.
             // Because of how objects are instantiated, the enemies are created and grouped in order of appearance in the enemy prefab
             // list.
-            for (int j = 0; j < 5; j++)
+            for (int j = 0; j < 16; j++)
             {
                 Enemies[i].Add(Instantiate(EnemyPrefabs[i], new Vector3(-1, -1, 0), Quaternion.identity));
                 Enemies[i][j].transform.SetParent(GameObject.Find("_ENEMYMANAGER").transform, true);
@@ -93,7 +93,7 @@ public class GenerateEnemies : MonoBehaviour
                 
                 // Increment the pool pointer and reset it's position if it overflows.
                 EnemySpawnPointers[i]++;
-                if (EnemySpawnPointers[i] > 4)
+                if (EnemySpawnPointers[i] > 15)
                 {
                     EnemySpawnPointers[i] = 0;
                 }
