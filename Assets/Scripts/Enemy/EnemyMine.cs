@@ -9,11 +9,18 @@ public class EnemyMine : Enemy
     public override void OnEnable()
     {
         Health = 10;
+        MaxHealth = Health;
+        
         Speed = 25;
+        
         ScoreOnDeath = 100;
+        
         // Mines spawn aligned with the player on the y-axis, with some variance for randomness.
         transform.position = new Vector3(CameraRight, GameObject.Find("Player").transform.position.y + Random.Range(-10f, 10f), 0);
+        
         isExploding = false;
+        isSmoking = false;
+        isOnFire = false;
 
         // Reset box collider back to it's initial, non-exploded value.
         GetComponent<BoxCollider2D>().size = new Vector2(0.55f, 0.55f);

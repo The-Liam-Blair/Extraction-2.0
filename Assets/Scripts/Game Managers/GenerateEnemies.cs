@@ -24,6 +24,10 @@ public class GenerateEnemies : MonoBehaviour
     // Player position to be used for spawning enemies aligned with the player on the y-axis.
     private Vector3 playerPos;
 
+    [SerializeField] private GameObject SmokeParticle;
+    [SerializeField] private GameObject FlameParticle;
+
+
     private void Start()
     {
         // Lists are added in order of the enemies in the prefab list.

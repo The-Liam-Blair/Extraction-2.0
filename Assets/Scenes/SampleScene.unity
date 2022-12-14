@@ -265,7 +265,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6672448693859184866, guid: 27afe5363c6f386488d00ee90ef36d18, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 6672448693859184866, guid: 27afe5363c6f386488d00ee90ef36d18, type: 3}
       propertyPath: m_LocalRotation.w
@@ -390,6 +390,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EnemyPrefabs:
   - {fileID: 6988309100383810464, guid: a03f0c7a91367674a8b65dd13f42d1c8, type: 3}
+  SmokeParticle: {fileID: 1948047667001432766, guid: 03907524988bf8d44bccc6ab48a87cb7, type: 3}
+  FlameParticle: {fileID: 2016554632992242312, guid: e547c43d3674f4240a0962f22f2beffd, type: 3}
 --- !u!1001 &1733086026
 PrefabInstance:
   m_ObjectHideFlags: 0

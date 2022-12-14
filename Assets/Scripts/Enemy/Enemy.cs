@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 // Base enemy class implementation.
@@ -14,6 +15,7 @@ using UnityEngine;
 /// 
 /// Legacy Enemies (Present in Extraction 1):
 ///
+///   DUN :)
 /// - Mine: Stationary, floating object that explodes on death or on collision with a miniature nuclear blast.
 ///     L2: No change to the mine, but 3 mines will spawn together in a random, tight group.
 /// 
@@ -130,6 +132,12 @@ public abstract class Enemy : MonoBehaviour
         protected set; // Protected: Only the derived enemy classes can set their own health points. Getter is still public however.
     }
 
+    public int MaxHealth
+    {
+        get;
+        protected set;
+    }
+
     
     // Movement speed multiplier of the enemy. (The actual, final movement speed of enemies is calculated as Speed * dt).
     protected int Speed { get; set; }
@@ -150,10 +158,44 @@ public abstract class Enemy : MonoBehaviour
         protected set;
     }
 
-    
+    // Game object which generates smoke at a location.
+    protected virtual GameObject SmokeParticle
+    {
+        get;
+        set;
+    }
+
+    // Bool checks if enemy is damaged enough that it's visibly smoking.
+    protected bool isSmoking
+    {
+        get;
+        set;
+    }
+
+    // Game object which generates flames at a location.
+    protected virtual GameObject FlameParticle
+    {
+        get;
+        set;
+    }
+
+    // Bool checks if enemy is severely damaged enough that it's on fire.
+    protected bool isOnFire
+    {
+        get;
+        set;
+    }
+
+
     // Right-Most side of the screen + 70 units further to the right, to serve as the enemy spawn point on the x axis.
     protected int CameraRight = 430;
 
+    public void Awake()
+    {
+        // Load smoke and flame particle (game objects) from resources folder within the Particle prefab.
+        SmokeParticle = Resources.Load("P_Smoke") as GameObject;
+        FlameParticle = Resources.Load("P_Fire") as GameObject;
+    }
 
     // virtual methods ensure each enemy has an onEnable and update method.
     public virtual void OnEnable() {}
@@ -166,7 +208,8 @@ public abstract class Enemy : MonoBehaviour
     protected void OnBecameInvisible()
     {
         // Don't deactivate objects on the rightmost side of the screen, which have just re-spawned.
-        if (transform.position.x > 370) { return; }
+        if (transform.position.x > 370 | transform.position.x > -50) { return; }
+        
         gameObject.SetActive(false);
     }
 
@@ -182,6 +225,20 @@ public abstract class Enemy : MonoBehaviour
             if (other.gameObject.tag == "PlayerProjectile")
             {
                 Health -= GameObject.Find("Player").GetComponent<PlayerCombat>().Damage;
+                
+                // Enemy loses over 20% of it's hp: It starts to smoke.
+                if (!isSmoking && Health <= Mathf.FloorToInt(MaxHealth * 0.8f))
+                {
+                    EnemyShipSmoking();
+                    isSmoking = true;
+                }
+                
+                // Enemy loses over 60% of it's hp: It is set on fire.
+                else if (!isOnFire && Health <= Mathf.FloorToInt(MaxHealth * 0.4f))
+                {
+                    EnemyShipOnFire();
+                    isOnFire = true;
+                }
                 
                 if (Health <= 0) { Explode(); }
                 else { Hurt(); }
@@ -207,7 +264,17 @@ public abstract class Enemy : MonoBehaviour
     //
     // Each enemy has a derived Explode() function but will always call this base function to play the exploding animation. The
     // derived animations are to modify components during explosions, such as the collision.
-    public virtual void Explode() { isExploding = true; GetComponent<Animator>().Play("Explode"); }
+    public virtual void Explode() { 
+        isExploding = true;
+        GetComponent<Animator>().Play("Explode");
+        
+        // Destroy all children object attached to enemy on death (Particle effects).
+        // todo: (maybe) do pooling for particles
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
 
     
     // Called by the animator component when an enemy's explosion animation completes: disable the enemy.
@@ -216,4 +283,41 @@ public abstract class Enemy : MonoBehaviour
     // Enemy has taken non-fatal damage when this is called, so an animation plays that very quickly places a red tint on the 
     // enemy sprite to signify that it has taken damage.
     public void Hurt() { GetComponent<Animator>().Play("Hurt"); }
+
+
+
+    // Make an enemy's ship start to smoke by instantiating a smoke particle game object and attach to enemy as a child.
+    public void EnemyShipSmoking()
+    {
+        Bounds enemyBounds = GetComponent<Collider2D>().bounds;
+
+        Vector3 smokePos = new Vector3(Random.Range(enemyBounds.min.x + 0.5f, enemyBounds.max.x),  // Set position of game object to be 
+            Random.Range(enemyBounds.min.y, enemyBounds.max.y),                                    // Within the centre (50% inwards) of the bounds.
+            -2); // -2 z position to move smoke particle in front the enemy.
+        
+
+        GameObject smoke = Instantiate(SmokeParticle,
+            smokePos,
+            Quaternion.identity, 
+            transform);
+
+        smoke.GetComponent<ParticleSystem>().Play();
+    }
+
+    // Make an enemy's ship be set on fire by instantiating a flame particle game object and attach to enemy as a child.
+    public void EnemyShipOnFire()
+    {
+        Bounds enemyBounds = GetComponent<Collider2D>().bounds;
+
+        Vector3 firePos = new Vector3(Random.Range(enemyBounds.min.x + 0.5f, enemyBounds.max.x - 0.5f),
+            Random.Range(enemyBounds.min.y + 0.5f, enemyBounds.max.y - 0.5f),
+            -2);
+        GameObject flame = Instantiate(FlameParticle,
+            firePos,
+            Quaternion.identity,
+            transform);
+
+        flame.GetComponent<ParticleSystem>().Play();
+    }
+
 }
