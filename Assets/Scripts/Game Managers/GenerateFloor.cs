@@ -176,6 +176,6 @@ public class GenerateFloor : MonoBehaviour
     /// </summary>
     public void GenerateFlatTerrain()
     {
-        FlatTerrainTimer = 3.0f;
+        FlatTerrainTimer = 0.5f;
     }
 }

@@ -11,15 +11,15 @@ public class GenerateEnemies : MonoBehaviour
     [SerializeField] private GameObject[] EnemyPrefabs;
 
     // Holds the pool of enemies, all entirely stored on this 2D list.
-    private List<List<GameObject>> Enemies = new List<List<GameObject>>();
+    [SerializeField] public List<List<GameObject>> Enemies = new List<List<GameObject>>();
     
     // Cooldown time for spawning each enemy type.
-    private List<float> EnemySpawnCooldowns = new List<float>();
+    public List<float> EnemySpawnCooldowns = new List<float>();
     // Starter cooldown value for each enemy after the enemy has just spawned.
-    private List<float> EnemySpawnCooldownsReset = new List<float>();
+    public List<float> EnemySpawnCooldownsReset = new List<float>();
 
     // Pointers for each enemy type to enable object pooling.
-    private List<int> EnemySpawnPointers = new List<int>();
+    public List<int> EnemySpawnPointers = new List<int>();
 
     // Player position to be used for spawning enemies aligned with the player on the y-axis.
     private Vector3 playerPos;
@@ -62,12 +62,18 @@ public class GenerateEnemies : MonoBehaviour
 
             switch (EnemyPrefabs[i].name)
             {
-                // If the enemy was a mine...
+                // Mine enemy...
                 case "Mine":
                     // Add the cooldown interval to spawn this mine enemy to the list of enemy spawn cooldowns. (in this case, 4 seconds).
                     // SpawnCooldowns is the current cooldown timer, SpawnCooldownsReset is the 'reset' value which the spawn variable is set to after spawning an enemy.
                     EnemySpawnCooldowns.Add(4);
                     EnemySpawnCooldownsReset.Add(4);
+                    break;
+
+                // Turret enemy...
+                case "Turret":
+                    EnemySpawnCooldowns.Add(5);
+                    EnemySpawnCooldownsReset.Add(5);
                     break;
 
                 // repeat for each enemy type...
@@ -94,6 +100,12 @@ public class GenerateEnemies : MonoBehaviour
                 // enemies will massively vary in how they spawn (For example, mines may align themselves with the
                 // player, while turrets may be situated on the ground).
                 Enemies[i][EnemySpawnPointers[i]].SetActive(true);
+
+                // Force flat terrain for enemies that sit on the ground such that the sprites do not clip into each other.
+                if (i == 1)
+                {
+                    GameObject.Find("_GAMEMANAGER").GetComponent<GenerateFloor>().GenerateFlatTerrain();
+                }
                 
                 // Increment the pool pointer and reset it's position if it overflows.
                 EnemySpawnPointers[i]++;
