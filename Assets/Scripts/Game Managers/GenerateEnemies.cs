@@ -27,7 +27,6 @@ public class GenerateEnemies : MonoBehaviour
     [SerializeField] private GameObject SmokeParticle;
     [SerializeField] private GameObject FlameParticle;
 
-
     private void Start()
     {
         // Lists are added in order of the enemies in the prefab list.
@@ -101,12 +100,6 @@ public class GenerateEnemies : MonoBehaviour
                 // player, while turrets may be situated on the ground).
                 Enemies[i][EnemySpawnPointers[i]].SetActive(true);
 
-                // Force flat terrain for enemies that sit on the ground such that the sprites do not clip into each other.
-                if (i == 1)
-                {
-                    GameObject.Find("_GAMEMANAGER").GetComponent<GenerateFloor>().GenerateFlatTerrain();
-                }
-                
                 // Increment the pool pointer and reset it's position if it overflows.
                 EnemySpawnPointers[i]++;
                 if (EnemySpawnPointers[i] > 15)

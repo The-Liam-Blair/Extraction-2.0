@@ -174,8 +174,9 @@ public class GenerateFloor : MonoBehaviour
     /// Generate purposely flat terrain. Overrides the creation of all other terrain, as it's normally used to prepare terrain for an enemy structure or weapon
     /// to sit on.
     /// </summary>
-    public void GenerateFlatTerrain()
+    /// <param name="duration">Time to keep the flat terrain for in seconds. Defaults to 0.5 if no input is provided.</param>
+    public void GenerateFlatTerrain(float duration = 0.5f)
     {
-        FlatTerrainTimer = 0.5f;
+        FlatTerrainTimer = duration;
     }
 }

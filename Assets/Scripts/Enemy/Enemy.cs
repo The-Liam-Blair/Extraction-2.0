@@ -125,7 +125,9 @@ using UnityEngine;
 ///   - Increased enemy spawn rate.
 public abstract class Enemy : MonoBehaviour
 {
-    // Health of the enemy.
+    /// <summary>
+    /// Health of the enemy.
+    /// </summary>
     public int Health
     {
         get;
@@ -139,11 +141,15 @@ public abstract class Enemy : MonoBehaviour
     }
 
     
-    // Movement speed multiplier of the enemy. (The actual, final movement speed of enemies is calculated as Speed * dt).
+    /// <summary>
+    /// Movement speed multiplier of the enemy. (The actual, final movement speed of enemies is calculated as Speed * dt).
+    /// </summary>
     protected int Speed { get; set; }
 
     
-    // Score awarded to the player when the enemy is defeated.
+    /// <summary>
+    /// Score awarded to the player when the enemy is defeated.
+    /// </summary>
     public int ScoreOnDeath
     {
         get;
@@ -151,35 +157,54 @@ public abstract class Enemy : MonoBehaviour
     }
 
     
-    // Bool tracks if the enemy is exploding, which is used to disable physics collisions to prevent unintentional animation looping/replaying.
+    /// <summary>
+    /// Bool tracks if the enemy is exploding, which is used to disable physics collisions to prevent unintentional animation looping/replaying.
+    /// </summary>
     public bool isExploding
     {
         get;
         protected set;
     }
 
-    // Game object which generates smoke at a location.
+    /// <summary>
+    /// Can this enemy touch terrain without being destroyed, such as turrets.
+    /// </summary>
+    protected bool canHitTerrain
+    {
+        get;
+        set;
+    } = false;
+
+    /// <summary>
+    /// Game object which generates smoke at a location.
+    /// </summary>
     protected virtual GameObject SmokeParticle
     {
         get;
         set;
     }
 
-    // Bool checks if enemy is damaged enough that it's visibly smoking.
+    /// <summary>
+    /// Bool checks if enemy is damaged enough that it's visibly smoking.
+    /// </summary>
     protected bool isSmoking
     {
         get;
         set;
     }
 
-    // Game object which generates flames at a location.
+    /// <summary>
+    /// Game object which generates flames at a location.
+    /// </summary>
     protected virtual GameObject FlameParticle
     {
         get;
         set;
     }
 
-    // Bool checks if enemy is severely damaged enough that it's on fire.
+    /// <summary>
+    /// Bool checks if enemy is severely damaged enough that it's on fire.
+    /// </summary>
     protected bool isOnFire
     {
         get;
@@ -187,14 +212,18 @@ public abstract class Enemy : MonoBehaviour
     }
 
 
-    // Right-Most side of the screen + 70 units further to the right, to serve as the enemy spawn point on the x axis.
-    protected int CameraRight = 430;
+    /// <summary>
+    /// Spawn point of the enemy.
+    /// Spawn point is slightly ahead of terrain spawn point so that runtime terrain distance calculations can be completed with already-spawned terrain.
+    /// </summary>
+    protected const int CameraRight = 500;
 
     public void Awake()
     {
+        // UNUSED PARTICLE SYSTEM INSTANTIATION: KEPT FOR POTENTIAL FUTURE REFERENCE.
         // Load smoke and flame particle (game objects) from resources folder within the Particle prefab.
-        SmokeParticle = Resources.Load("P_Smoke") as GameObject;
-        FlameParticle = Resources.Load("P_Fire") as GameObject;
+        //SmokeParticle = Resources.Load("P_Smoke") as GameObject;
+        //FlameParticle = Resources.Load("P_Fire") as GameObject;
     }
 
     // virtual methods ensure each enemy has an onEnable and update method.
@@ -208,7 +237,7 @@ public abstract class Enemy : MonoBehaviour
     protected void OnBecameInvisible()
     {
         // Don't deactivate objects on the rightmost side of the screen, which have just re-spawned.
-        if (transform.position.x > 370 | transform.position.x > -50) { return; }
+        if (transform.position.x > 350 | transform.position.x > -50) { return; }
         
         gameObject.SetActive(false);
     }
@@ -216,77 +245,67 @@ public abstract class Enemy : MonoBehaviour
     // Handle collisions with other entities.
     protected void OnCollisionEnter2D(Collision2D other)
     {
-        // If the enemy isn't currently exploding...
-        if (!isExploding)
+        // Do not perform collision checking if enemy is already exploding -> already dead.
+        if (isExploding) { return; }
+        
+        // If collided with a player's projectile, inflict projectile damage to that enemy. If this attack was fatal, the
+        // enemy explodes. Otherwise, it is only hurt.
+        if (other.gameObject.tag == "PlayerProjectile")
         {
+            Health -= GameObject.Find("Player").GetComponent<PlayerCombat>().Damage;
 
-            // If collided with a player's projectile, inflict projectile damage to that enemy. If this attack was fatal, the
-            // enemy explodes. Otherwise, it is only hurt.
-            if (other.gameObject.tag == "PlayerProjectile")
-            {
-                Health -= GameObject.Find("Player").GetComponent<PlayerCombat>().Damage;
-                
-                // Enemy loses over 20% of it's hp: It starts to smoke.
-                if (!isSmoking && Health <= Mathf.FloorToInt(MaxHealth * 0.8f))
-                {
-                    EnemyShipSmoking();
-                    isSmoking = true;
-                }
-                
-                // Enemy loses over 60% of it's hp: It is set on fire.
-                else if (!isOnFire && Health <= Mathf.FloorToInt(MaxHealth * 0.4f))
-                {
-                    EnemyShipOnFire();
-                    isOnFire = true;
-                }
-                
-                if (Health <= 0) { Explode(); }
-                else { Hurt(); }
-            }
+            if (Health <= 0) { Explode(); } // todo weird bug: After enemy explodes and respawns, explosion first frame animation plays alongside/sometimes replacing hurt animation.
+            else { Hurt(); }
+        }
 
-            // If collided with the player itself or terrain, the enemy explodes regardless of it's hp.
-            else if (other.gameObject.tag == "Player" || other.gameObject.tag == "Terrain")
-            {
-                Explode();
-            }
+        // If collided with the player itself or terrain, the enemy explodes regardless of it's hp.
+        // If collided with terrain, it will only explode if the enemy is unable to hit terrain safely; buildings etc do not explode on terrain contact.
+        else if (other.gameObject.tag == "Player" || (other.gameObject.tag == "Terrain" && !canHitTerrain))
+        {
+            Health = 0;
         }
     }
 
 
-    // Will be called by all update functions: Makes objects move leftward with the terrain and other objects to give the illusion of
-    // the player flying through the level.
+    /// <summary>
+    /// Will be called by all update functions: Makes objects move leftward with the terrain and other objects to give the illusion of
+    /// the player flying through the level.
+    /// </summary>
     protected void MoveLeft() { transform.Translate(-Speed * Time.deltaTime, 0, 0); }
 
 
-    // Enemy is dead when this is called, so play the Explode animation from the enemy's animator component.
-    // OnExplodeEnd() is automatically called when the explode animation ends so that the enemy will be set to inactive as soon 
-    // as the exploding animation completes.
-    //
-    // Each enemy has a derived Explode() function but will always call this base function to play the exploding animation. The
-    // derived animations are to modify components during explosions, such as the collision.
+    /// <summary>
+    /// Enemy is dead when this is called, so play the Explode animation from the enemy's animator component.
+    /// OnExplodeEnd() is automatically called when the explode animation ends so that the enemy will be set to inactive as soon 
+    /// as the exploding animation completes.
+    ///
+    /// Each enemy has a derived Explode() function but will always call this base function to play the exploding animation. The
+    /// derived animations are to modify components during explosions, such as the collision.
+    /// </summary>
     public virtual void Explode() { 
         isExploding = true;
         GetComponent<Animator>().Play("Explode");
-        
-        // Destroy all children object attached to enemy on death (Particle effects).
-        // todo: (maybe) do pooling for particles
-        foreach (Transform child in transform)
-        {
-            Destroy(child.gameObject);
-        }
     }
 
     
-    // Called by the animator component when an enemy's explosion animation completes: disable the enemy.
+    /// <summary>
+    /// Called by the animator component when an enemy's explosion animation completes: disable the enemy.
+    /// </summary>
     public void OnExplodeEnd() { gameObject.SetActive(false); }
 
-    // Enemy has taken non-fatal damage when this is called, so an animation plays that very quickly places a red tint on the 
-    // enemy sprite to signify that it has taken damage.
+    /// <summary>
+    /// Enemy has taken non-fatal damage when this is called, so an animation plays that very quickly places a red tint on the 
+    /// enemy sprite to signify that it has taken damage.
+    /// </summary>
     public void Hurt() { GetComponent<Animator>().Play("Hurt"); }
 
 
 
-    // Make an enemy's ship start to smoke by instantiating a smoke particle game object and attach to enemy as a child.
+    // UNUSED PARTICLE CALLS: KEPT FOR (POTENTIAL) FUTURE REFERENCE.
+    
+    /// <summary>
+    /// Make an enemy's ship start to smoke by instantiating a smoke particle game object and attach to enemy as a child.
+    /// </summary>
     public void EnemyShipSmoking()
     {
         Bounds enemyBounds = GetComponent<Collider2D>().bounds;
@@ -304,7 +323,9 @@ public abstract class Enemy : MonoBehaviour
         smoke.GetComponent<ParticleSystem>().Play();
     }
 
-    // Make an enemy's ship be set on fire by instantiating a flame particle game object and attach to enemy as a child.
+    /// <summary>
+    /// Make an enemy's ship be set on fire by instantiating a flame particle game object and attach to enemy as a child.
+    /// </summary>
     public void EnemyShipOnFire()
     {
         Bounds enemyBounds = GetComponent<Collider2D>().bounds;
