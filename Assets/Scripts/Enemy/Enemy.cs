@@ -158,7 +158,7 @@ public abstract class Enemy : MonoBehaviour
 
     
     /// <summary>
-    /// Bool tracks if the enemy is exploding, which is used to disable physics collisions to prevent unintentional animation looping/replaying.
+    /// Is the enemy exploding (And so the relevant animations are playing and triggers have been disabled)?
     /// </summary>
     public bool isExploding
     {
@@ -167,7 +167,7 @@ public abstract class Enemy : MonoBehaviour
     }
 
     /// <summary>
-    /// Can this enemy touch terrain without being destroyed, such as turrets.
+    /// Can this enemy touch terrain without being destroyed?
     /// </summary>
     protected bool canHitTerrain
     {
@@ -184,6 +184,8 @@ public abstract class Enemy : MonoBehaviour
         set;
     }
 
+    //todo: either incorporate or get rid of particle system handlers below
+    
     /// <summary>
     /// Bool checks if enemy is damaged enough that it's visibly smoking.
     /// </summary>
@@ -218,12 +220,16 @@ public abstract class Enemy : MonoBehaviour
     /// </summary>
     protected const int CameraRight = 500;
 
-    public void Awake()
+    protected GameObject player;
+
+    public void Start()
     {
         // UNUSED PARTICLE SYSTEM INSTANTIATION: KEPT FOR POTENTIAL FUTURE REFERENCE.
         // Load smoke and flame particle (game objects) from resources folder within the Particle prefab.
         //SmokeParticle = Resources.Load("P_Smoke") as GameObject;
         //FlameParticle = Resources.Load("P_Fire") as GameObject;
+
+        player = GameObject.FindGameObjectWithTag("Player"); // Faster to search via tag than search via object names due to reduced search space.
     }
 
     // virtual methods ensure each enemy has an onEnable and update method.
@@ -292,6 +298,16 @@ public abstract class Enemy : MonoBehaviour
     /// Called by the animator component when an enemy's explosion animation completes: disable the enemy.
     /// </summary>
     public void OnExplodeEnd() { gameObject.SetActive(false); }
+
+    /// <summary>
+    /// Called by the animator component when an enemy's attack (which requires charging) is finished charging: Execute the attack.
+    /// </summary>
+    public void OnChargeEnd() { Attack();}
+
+    /// <summary>
+    /// Called by the animator component when the enemy will execute an attack (May or may not require charging).
+    /// </summary>
+    public void Attack() { Debug.Log("kek"); }
 
     /// <summary>
     /// Enemy has taken non-fatal damage when this is called, so an animation plays that very quickly places a red tint on the 

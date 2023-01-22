@@ -5,9 +5,15 @@ using UnityEngine;
 // Implementation of the mine enemy, a large floating mine that explodes when destroyed.
 public class EnemyTurret : Enemy
 {
+    // Gun is a separate object so it can be rotated/aimed independently.
+    private GameObject gun;
+
+    private bool shot;
+
     public void Awake()
     {
         canHitTerrain = true;
+        gun = gameObject.transform.GetChild(0).gameObject;
     }
 
     public override void OnEnable()
@@ -21,6 +27,8 @@ public class EnemyTurret : Enemy
 
         transform.position = new Vector3(CameraRight + 50, 60.0f, transform.position.z);
 
+        shot = false;
+
         // Turrets spawn sitting on top of the floor, whose height needs to be calculated at runtime.
         StartCoroutine(SetTurretYPos());
     }
@@ -28,6 +36,9 @@ public class EnemyTurret : Enemy
     public override void Update()
     {
         MoveLeft();
+        AimGun();
+
+        test_Shoot();
     }
 
     public override void Explode()
@@ -64,5 +75,25 @@ public class EnemyTurret : Enemy
             GetYFloorPosition());
         yield return null;
 
+    }
+
+    /// <summary>
+    /// Rotate turret gun on the z axis to face and aim at the player
+    /// </summary>
+    private void AimGun()
+    {
+        Vector3 playerPos = player.transform.position;
+
+        gun.transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(playerPos.y - gun.transform.position.y, playerPos.x - gun.transform.position.x) * Mathf.Rad2Deg - 135f);
+    }
+
+    private void test_Shoot()
+    {
+        if (!shot && Vector3.Distance(player.transform.position, transform.position) < 40)
+        {
+            shot = true;
+            GetComponent<Animator>().Play("Fire");
+            Debug.Log("firin");
+        }
     }
 }

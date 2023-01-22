@@ -37,7 +37,7 @@ public class GenerateFloor : MonoBehaviour
     // into the ground.
     private float FlatTerrainTimer = 0.0f;
 
-    private void Start()
+    private void Awake()
     {
         // For each tile in the tile pool:
         // - Calculate the new y position of the current tile. Used to generate initially uneven terrain rather than oddly flat terrain on level start.

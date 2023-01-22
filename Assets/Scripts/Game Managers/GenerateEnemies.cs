@@ -27,7 +27,7 @@ public class GenerateEnemies : MonoBehaviour
     [SerializeField] private GameObject SmokeParticle;
     [SerializeField] private GameObject FlameParticle;
 
-    private void Start()
+    private void Awake()
     {
         // Lists are added in order of the enemies in the prefab list.
         foreach (GameObject enemy in EnemyPrefabs)
