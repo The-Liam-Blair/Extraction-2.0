@@ -175,6 +175,14 @@ public abstract class Enemy : MonoBehaviour
         set;
     } = false;
 
+    protected GameObject hurtSprite
+    {
+        get;
+        set;
+    }
+
+    //todo: either incorporate or get rid of particle system handlers below
+
     /// <summary>
     /// Game object which generates smoke at a location.
     /// </summary>
@@ -184,8 +192,6 @@ public abstract class Enemy : MonoBehaviour
         set;
     }
 
-    //todo: either incorporate or get rid of particle system handlers below
-    
     /// <summary>
     /// Bool checks if enemy is damaged enough that it's visibly smoking.
     /// </summary>
@@ -230,16 +236,27 @@ public abstract class Enemy : MonoBehaviour
         //FlameParticle = Resources.Load("P_Fire") as GameObject;
 
         player = GameObject.FindGameObjectWithTag("Player"); // Faster to search via tag than search via object names due to reduced search space.
+
+        // Fetch hurt sprite, which is the 1st child of each enemy.
+        hurtSprite = transform.GetChild(0).gameObject;
+        hurtSprite.SetActive(false);
     }
 
-    // virtual methods ensure each enemy has an onEnable and update method.
-    public virtual void OnEnable() {}
+    /// <summary>
+    /// Enemy (re)spawns -> (Re)initialise game stats such as health and position.
+    /// </summary>
+    protected virtual void OnEnable() {}
+
+    /// <summary>
+    /// Enemy runtime handling is done here, such as movement and usage of any abilities the enemy may have.
+    /// </summary>
+    protected virtual void Update() {}
 
     
-    public virtual void Update() {}
-
-    
-    // De-activate the object if it leaves the screen boundaries.
+    /// <summary>
+    /// Enemy left the screen boundaries -> Deactivate it (Also performs a check to ensure that the enemy is not on the far right of the screen to prevent
+    /// it from de-spawning just after spawning.
+    /// </summary>
     protected void OnBecameInvisible()
     {
         // Don't deactivate objects on the rightmost side of the screen, which have just re-spawned.
@@ -247,28 +264,46 @@ public abstract class Enemy : MonoBehaviour
         
         gameObject.SetActive(false);
     }
-
-    // Handle collisions with other entities.
+    
+    /// <summary>
+    /// Handle collision with entities, namely with collisions with the player, player projectiles and terrain.
+    /// Also handles damaging events, such as taking fatal or non-fatal damage.
+    /// </summary>
+    /// <param name="other">The other object which this enemy collided with.</param>
     protected void OnCollisionEnter2D(Collision2D other)
     {
         // Do not perform collision checking if enemy is already exploding -> already dead.
         if (isExploding) { return; }
-        
-        // If collided with a player's projectile, inflict projectile damage to that enemy. If this attack was fatal, the
-        // enemy explodes. Otherwise, it is only hurt.
-        if (other.gameObject.tag == "PlayerProjectile")
-        {
-            Health -= GameObject.Find("Player").GetComponent<PlayerCombat>().Damage;
 
-            if (Health <= 0) { Explode(); } // todo weird bug: After enemy explodes and respawns, explosion first frame animation plays alongside/sometimes replacing hurt animation.
-            else { Hurt(); }
-        }
-
-        // If collided with the player itself or terrain, the enemy explodes regardless of it's hp.
-        // If collided with terrain, it will only explode if the enemy is unable to hit terrain safely; buildings etc do not explode on terrain contact.
-        else if (other.gameObject.tag == "Player" || (other.gameObject.tag == "Terrain" && !canHitTerrain))
+        switch (other.gameObject.tag)
         {
-            Health = 0;
+            // Hit by player projectile: inflict projectile damage. Run hurt or explode functions as necessary.
+            case "PlayerProjectile":
+                Health -= GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCombat>().Damage;
+
+                if (Health <= 0) { Explode(); }
+                else { Hurt(); }
+                break;
+
+            // Hit by player ship directly: Explode immediately. Collision detection on player side will handle player damage.
+            case "Player":
+                Explode();
+                break;
+            
+            // Hit terrain: If unable to hit terrain, explode immediately. Enemies that can touch terrain (Like grounded buildings) will not explode or take any damage.
+            case "Terrain":
+                if (!canHitTerrain) { Explode(); }
+                break;
+
+            // Hit another enemy: Both this and the other enemy will explode. Screen boundary check is done first as some enemy's true positions are not set until just after spawning from
+            // the far right of the screen, such as turrets.
+            case "Enemy":
+                if (transform.position.x > -50 && transform.position.x < 350)
+                {
+                    Explode();
+                    other.gameObject.GetComponent<Enemy>().Explode();
+                }
+                break;
         }
     }
 
@@ -288,7 +323,7 @@ public abstract class Enemy : MonoBehaviour
     /// Each enemy has a derived Explode() function but will always call this base function to play the exploding animation. The
     /// derived animations are to modify components during explosions, such as the collision.
     /// </summary>
-    public virtual void Explode() { 
+    protected virtual void Explode() { 
         isExploding = true;
         GetComponent<Animator>().Play("Explode");
     }
@@ -297,28 +332,34 @@ public abstract class Enemy : MonoBehaviour
     /// <summary>
     /// Called by the animator component when an enemy's explosion animation completes: disable the enemy.
     /// </summary>
-    public void OnExplodeEnd() { gameObject.SetActive(false); }
+    protected virtual void OnExplodeEnd() { gameObject.SetActive(false); }
 
     /// <summary>
     /// Called by the animator component when an enemy's attack (which requires charging) is finished charging: Execute the attack.
     /// </summary>
-    public void OnChargeEnd() { Attack();}
+    protected virtual void OnChargeEnd() { Attack();}
 
     /// <summary>
     /// Called by the animator component when the enemy will execute an attack (May or may not require charging).
     /// </summary>
-    public void Attack() { Debug.Log("kek"); }
+    protected virtual void Attack() { Debug.Log("kek"); }
+
+    
+    /// <summary>
+    /// Enemy takes non-fatal damage -> Set a hurt sprite active which overlaps the normal enemy sprite to indicate damage was taken.
+    /// By loading a sprite over the enemy, the enemy's animations will be uninterrupted, and so any animations can seamlessly play while taking damage.
+    /// </summary>
+    protected virtual void Hurt() { hurtSprite.SetActive(true); Invoke("HurtFinish", 0.05f); }
+
 
     /// <summary>
-    /// Enemy has taken non-fatal damage when this is called, so an animation plays that very quickly places a red tint on the 
-    /// enemy sprite to signify that it has taken damage.
+    /// Called by the Hurt method after a very short delay to remove the hurt sprite to show the enemy again.
     /// </summary>
-    public void Hurt() { GetComponent<Animator>().Play("Hurt"); }
-
+    protected virtual void HurtFinish() { hurtSprite.SetActive(false); }
 
 
     // UNUSED PARTICLE CALLS: KEPT FOR (POTENTIAL) FUTURE REFERENCE.
-    
+
     /// <summary>
     /// Make an enemy's ship start to smoke by instantiating a smoke particle game object and attach to enemy as a child.
     /// </summary>
@@ -356,5 +397,4 @@ public abstract class Enemy : MonoBehaviour
 
         flame.GetComponent<ParticleSystem>().Play();
     }
-
 }

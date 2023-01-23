@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 14baf75c500d53b48be4326775f06711
+guid: cb98f21865877834d8dc8b8a987ed76a
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -47,6 +47,9 @@ TextureImporter:
   - first:
       213: -2294409721484826815
     second: Turret Body Fire_14
+  - first:
+      213: -7874267507970451285
+    second: Turret Body Fire_15
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -450,10 +453,31 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Turret Body Fire_15
+      rect:
+        serializedVersion: 2
+        x: 395
+        y: 45
+        width: 106
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba85501db6bf8b290800000000000000
+      internalID: -7874267507970451285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 18893f01b7ec02f418211aa98f3123e4
     internalID: 0
     vertices: []
     indices: 

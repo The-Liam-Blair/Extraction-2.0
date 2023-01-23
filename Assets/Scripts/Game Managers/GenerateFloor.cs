@@ -11,9 +11,9 @@ using Random = UnityEngine.Random;
 public class GenerateFloor : MonoBehaviour
 {
     [SerializeField] private GameObject floorTile;
-
-    // Object pool of tiles: set to 128 for efficiency.
-    private readonly GameObject[] tilePool = new GameObject[128];
+    
+    // Object pool of tiles: set to 258 for efficient bit storage
+    private readonly GameObject[] tilePool = new GameObject[256];
     // Points to the next-selected tile in the tile pool, to allow reuse of the tile objects in the pool. Byte used for maximum storage efficiency.
     private byte poolPointer = 0;
 
@@ -40,7 +40,7 @@ public class GenerateFloor : MonoBehaviour
     private void Awake()
     {
         // For each tile in the tile pool:
-        // - Calculate the new y position of the current tile. Used to generate initially uneven terrain rather than oddly flat terrain on level start.
+        // - Calculate the new y position of the current tile. Used to generate unique terrain on level start instead of pre-determined terrain.
         // - Instantiate the object (with pre-attached update script to make it move).
         // - Spread out each tile on the x axis, and randomly generate y axis using the standard random height generator to populate the game with 
         //   an already-built ground.
@@ -48,7 +48,7 @@ public class GenerateFloor : MonoBehaviour
         {
             CalculateNewYPos();
             tilePool[i] = Instantiate(floorTile, new Vector3(-1, -1, 0), Quaternion.identity);
-            tilePool[i].transform.position = new Vector3(i*4.5f, CurrentFloorYPos, 0);
+            tilePool[i].transform.position = new Vector3(i*3.5f, CurrentFloorYPos, 0);
             tilePool[i].transform.SetParent(GameObject.Find("_FLOOR").transform, true);
             tilePool[i].name = "FloorTile [" + i + "]";
         }
@@ -60,7 +60,7 @@ public class GenerateFloor : MonoBehaviour
         // When the interval for drawing a new section of the floor has expired...
         if (floorDrawDelay <= 0)
         {
-            // Roll 1/100 chance to draw a hill. If successful, add time to the hill draw timer.
+            // Roll 1/100 chance to draw a hill everytime a new floor tile needs to be teleported in. If successful, add time to the hill draw timer.
             switch (Random.Range(0, 101))
             {
                 case 0:
@@ -174,7 +174,7 @@ public class GenerateFloor : MonoBehaviour
     /// Generate purposely flat terrain. Overrides the creation of all other terrain, as it's normally used to prepare terrain for an enemy structure or weapon
     /// to sit on.
     /// </summary>
-    /// <param name="duration">Time to keep the flat terrain for in seconds. Defaults to 0.5 if no input is provided.</param>
+    /// <param name="duration">Time to draw the flat terrain for in seconds. Defaults to 0.5 if no input is provided.</param>
     public void GenerateFlatTerrain(float duration = 0.5f)
     {
         FlatTerrainTimer = duration;

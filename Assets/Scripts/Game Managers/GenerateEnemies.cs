@@ -7,6 +7,14 @@ using UnityEngine;
 // For each enemy, init it with the enemy class for behaviours and yadda yadda.
 public class GenerateEnemies : MonoBehaviour
 {
+
+    // Each enemy type in order of appearance in the code, so the indexing in the enemies list matches the indexing from this enum.
+    private enum ENEMIES
+    {
+        MINE,
+        TURRET
+    };
+    
     // List of enemies as game objects.
     [SerializeField] private GameObject[] EnemyPrefabs;
 
@@ -29,6 +37,8 @@ public class GenerateEnemies : MonoBehaviour
 
     private void Awake()
     {
+        ENEMIES EnemyType;
+        
         // Lists are added in order of the enemies in the prefab list.
         foreach (GameObject enemy in EnemyPrefabs)
         {
@@ -106,9 +116,9 @@ public class GenerateEnemies : MonoBehaviour
                 {
                     EnemySpawnPointers[i] = 0;
                 }
-                
-                // Reset spawn cooldown to the reset value.
-                EnemySpawnCooldowns[i] = EnemySpawnCooldownsReset[i];
+
+                // Reset spawn cooldown to the reset value. (+/- 50% for a bit of randomness)
+                EnemySpawnCooldowns[i] = EnemySpawnCooldownsReset[i] + Random.Range(EnemySpawnCooldownsReset[i] * -0.5f, EnemySpawnCooldownsReset[i] * 0.5f);
             }
         }
 

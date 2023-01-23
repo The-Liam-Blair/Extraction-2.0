@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 
 // Implementation of the mine enemy, a large floating mine that explodes when destroyed.
@@ -8,43 +10,82 @@ public class EnemyTurret : Enemy
     // Gun is a separate object so it can be rotated/aimed independently.
     private GameObject gun;
 
-    private bool shot;
+    // Turret can shoot once per spawn.
+    private bool hasShot;
 
-    public void Awake()
+    // Is the enemy currently charging and about to fire?
+    private bool isChargingShot;
+
+    // Like the inherited hurtSprite but for the gun as well, who also has it's own hurt sprite.
+    private GameObject gunHurtSprite;
+
+
+    //todo: FOR RED TINT TEXTURING:
+    // If shader method fails: cheap way of emulating: Have child object follow parent, and have child object be a sprite with a red tint. Kept invisible, made briefly
+    // visible when enemy is hurt, does not have collision etc. Used so that other animations will not be interrupted and the hurt effect will still persist.
+    // all in all fuck shaders
+
+    private void Awake()
     {
         canHitTerrain = true;
-        gun = gameObject.transform.GetChild(0).gameObject;
+        gun = gameObject.transform.GetChild(1).gameObject;
+        gunHurtSprite = gun.transform.GetChild(0).gameObject;
+        ScoreOnDeath = 1000;
+
     }
 
-    public override void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         Health = 10;
         MaxHealth = Health;
 
-        Speed = 60; // Speed matches terrain movement speed so it appears to be stationary.
-
-        ScoreOnDeath = 1000;
+        Speed = 40; // Speed matches terrain movement speed so it appears to be stationary.
 
         transform.position = new Vector3(CameraRight + 50, 60.0f, transform.position.z);
 
-        shot = false;
+        hasShot = false;
+
+        isChargingShot = false;
+
+        gunHurtSprite.SetActive(false);
+
 
         // Turrets spawn sitting on top of the floor, whose height needs to be calculated at runtime.
         StartCoroutine(SetTurretYPos());
     }
 
-    public override void Update()
+    protected override void Update()
     {
         MoveLeft();
-        AimGun();
+        
+        if(!isChargingShot) { AimGun(); }
 
         test_Shoot();
     }
 
-    public override void Explode()
+    protected override void Explode()
     {
         base.Explode();
     }
+
+    protected override void OnChargeEnd()
+    {
+        isChargingShot = false;
+        base.OnChargeEnd();
+    }
+
+    protected override void Hurt()
+    {
+        base.Hurt();
+        gunHurtSprite.SetActive(true); Invoke("HurtTurretGunFinish", 0.05f);
+    }
+
+    private void HurtTurretGunFinish()
+    {
+        gunHurtSprite.SetActive(false);
+    }
+
 
     /// <summary>
     /// Using a raycast, get the intersection point of the terrain directly under a newly-spawned turret to find the position to place
@@ -57,9 +98,7 @@ public class EnemyTurret : Enemy
             Vector3.down,
             500f,
             LayerMask.GetMask("Terrain"));
-
-        Debug.DrawLine(transform.position, hit.point, Color.red, 3);
-
+        
         return hit.point.y + 5f;
     }
 
@@ -70,9 +109,9 @@ public class EnemyTurret : Enemy
     IEnumerator SetTurretYPos()
     {
         GameObject.Find("_GAMEMANAGER").GetComponent<GenerateFloor>().GenerateFlatTerrain(1f); // Ensure terrain under turret is flat to minimize clipping.
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1); // Wait for flat terrain to spawn.
         transform.position = new Vector2(transform.position.x,
-            GetYFloorPosition());
+            GetYFloorPosition()); // Find correct position to place the turret by performing a downwards ray cast, which is the flat terrain below.
         yield return null;
 
     }
@@ -89,11 +128,11 @@ public class EnemyTurret : Enemy
 
     private void test_Shoot()
     {
-        if (!shot && Vector3.Distance(player.transform.position, transform.position) < 40)
+        if (!hasShot && Vector3.Distance(player.transform.position, transform.position) < 40)
         {
-            shot = true;
+            hasShot = true;
+            isChargingShot = true; // Prevents gun aiming after firing, indicates that the turret is now inactive after firing.
             GetComponent<Animator>().Play("Fire");
-            Debug.Log("firin");
         }
     }
 }
