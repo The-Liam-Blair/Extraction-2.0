@@ -36,7 +36,6 @@ public class EnemyTurret : Enemy
 
     protected override void OnEnable()
     {
-        base.OnEnable();
         Health = 10;
         MaxHealth = Health;
 
@@ -66,6 +65,9 @@ public class EnemyTurret : Enemy
 
     protected override void Explode()
     {
+        isChargingShot = true; // Gun will not move or attempt to fire after turret destruction.
+        hasShot = true;
+        
         base.Explode();
     }
 
@@ -75,10 +77,16 @@ public class EnemyTurret : Enemy
         base.OnChargeEnd();
     }
 
+    protected override void OnExplodeEnd()
+    {
+        // Stops call to base.OnExplodeEnd() which will disable the enemy object instance. Makes destroyed turret persist after animation as it has a crumbling animation
+        // instead of a disappearing explosion animation.
+    }
+
     protected override void Hurt()
     {
-        base.Hurt();
         gunHurtSprite.SetActive(true); Invoke("HurtTurretGunFinish", 0.05f);
+        base.Hurt();
     }
 
     private void HurtTurretGunFinish()

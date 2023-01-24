@@ -1,0 +1,444 @@
+fileFormatVersion: 2
+guid: a59510c75284f364f9c7316902fdb190
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -6048644282389882860
+    second: Turret Gun Explosion_0
+  - first:
+      213: 7755275680326276129
+    second: Turret Gun Explosion_1
+  - first:
+      213: -1066905075651021395
+    second: Turret Gun Explosion_2
+  - first:
+      213: -7965132818577549217
+    second: Turret Gun Explosion_3
+  - first:
+      213: -8708303175308057286
+    second: Turret Gun Explosion_4
+  - first:
+      213: 4348602778497546546
+    second: Turret Gun Explosion_5
+  - first:
+      213: -7863846507581316225
+    second: Turret Gun Explosion_6
+  - first:
+      213: -8311032695785227375
+    second: Turret Gun Explosion_7
+  - first:
+      213: 5387650015815242003
+    second: Turret Gun Explosion_8
+  - first:
+      213: -3091166092293175933
+    second: Turret Gun Explosion_9
+  - first:
+      213: 2287890427740464476
+    second: Turret Gun Explosion_10
+  - first:
+      213: -271915656770233857
+    second: Turret Gun Explosion_11
+  - first:
+      213: 8226634469617816695
+    second: Turret Gun Explosion_12
+  - first:
+      213: 8404906183312529405
+    second: Turret Gun Explosion_13
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Turret Gun Explosion_0
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 469
+        width: 27
+        height: 26
+      alignment: 8
+      pivot: {x: 1, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 418147f7216ee0ca0800000000000000
+      internalID: -6048644282389882860
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret Gun Explosion_1
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 469
+        width: 27
+        height: 26
+      alignment: 8
+      pivot: {x: 1, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 124d21d542640ab60800000000000000
+      internalID: 7755275680326276129
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret Gun Explosion_2
+      rect:
+        serializedVersion: 2
+        x: 296
+        y: 469
+        width: 27
+        height: 26
+      alignment: 8
+      pivot: {x: 1, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: da572c48c779131f0800000000000000
+      internalID: -1066905075651021395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret Gun Explosion_3
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 469
+        width: 27
+        height: 26
+      alignment: 8
+      pivot: {x: 1, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f5811ef07e9267190800000000000000
+      internalID: -7965132818577549217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret Gun Explosion_4
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 341
+        width: 27
+        height: 26
+      alignment: 8
+      pivot: {x: 1, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a356b5f8664e52780800000000000000
+      internalID: -8708303175308057286
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret Gun Explosion_5
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 341
+        width: 27
+        height: 26
+      alignment: 8
+      pivot: {x: 1, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2397f99ef27595c30800000000000000
+      internalID: 4348602778497546546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret Gun Explosion_6
+      rect:
+        serializedVersion: 2
+        x: 296
+        y: 341
+        width: 27
+        height: 26
+      alignment: 8
+      pivot: {x: 1, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f736b6b04410ed290800000000000000
+      internalID: -7863846507581316225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret Gun Explosion_7
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 341
+        width: 27
+        height: 26
+      alignment: 8
+      pivot: {x: 1, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19b70130cc749ac80800000000000000
+      internalID: -8311032695785227375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret Gun Explosion_8
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 213
+        width: 27
+        height: 26
+      alignment: 8
+      pivot: {x: 1, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3119bc6f427c4ca40800000000000000
+      internalID: 5387650015815242003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret Gun Explosion_9
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 213
+        width: 27
+        height: 26
+      alignment: 8
+      pivot: {x: 1, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 385022711d8f915d0800000000000000
+      internalID: -3091166092293175933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret Gun Explosion_10
+      rect:
+        serializedVersion: 2
+        x: 296
+        y: 213
+        width: 27
+        height: 26
+      alignment: 8
+      pivot: {x: 1, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c55ac76e83830cf10800000000000000
+      internalID: 2287890427740464476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret Gun Explosion_11
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 213
+        width: 29
+        height: 20
+      alignment: 8
+      pivot: {x: 1, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ff9d75d9626f93cf0800000000000000
+      internalID: -271915656770233857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret Gun Explosion_12
+      rect:
+        serializedVersion: 2
+        x: 37
+        y: 85
+        width: 30
+        height: 16
+      alignment: 8
+      pivot: {x: 1, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 774dd8aa670ea2270800000000000000
+      internalID: 8226634469617816695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret Gun Explosion_13
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 85
+        width: 28
+        height: 16
+      alignment: 8
+      pivot: {x: 1, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: df7d3d284a934a470800000000000000
+      internalID: 8404906183312529405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: b8b18146fdbdecc4bab30e23f964b753
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

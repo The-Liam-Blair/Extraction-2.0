@@ -7,14 +7,6 @@ using UnityEngine;
 // For each enemy, init it with the enemy class for behaviours and yadda yadda.
 public class GenerateEnemies : MonoBehaviour
 {
-
-    // Each enemy type in order of appearance in the code, so the indexing in the enemies list matches the indexing from this enum.
-    private enum ENEMIES
-    {
-        MINE,
-        TURRET
-    };
-    
     // List of enemies as game objects.
     [SerializeField] private GameObject[] EnemyPrefabs;
 
@@ -37,8 +29,6 @@ public class GenerateEnemies : MonoBehaviour
 
     private void Awake()
     {
-        ENEMIES EnemyType;
-        
         // Lists are added in order of the enemies in the prefab list.
         foreach (GameObject enemy in EnemyPrefabs)
         {

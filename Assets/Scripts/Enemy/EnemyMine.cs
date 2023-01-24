@@ -15,8 +15,6 @@ public class EnemyMine : Enemy
     // When object is active again, re-initialise it's properties.
     protected override void OnEnable()
     {
-        base.OnEnable();
-        
         Health = 10;
         MaxHealth = Health;
         

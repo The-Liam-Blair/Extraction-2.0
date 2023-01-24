@@ -239,7 +239,6 @@ public abstract class Enemy : MonoBehaviour
 
         // Fetch hurt sprite, which is the 1st child of each enemy.
         hurtSprite = transform.GetChild(0).gameObject;
-        hurtSprite.SetActive(false);
     }
 
     /// <summary>
@@ -261,8 +260,15 @@ public abstract class Enemy : MonoBehaviour
     {
         // Don't deactivate objects on the rightmost side of the screen, which have just re-spawned.
         if (transform.position.x > 350 | transform.position.x > -50) { return; }
-        
+
+        hurtSprite.SetActive(false);
         gameObject.SetActive(false);
+    }
+
+    
+    protected virtual void OnBecameVisible()
+    {
+        hurtSprite.SetActive(false);
     }
     
     /// <summary>
