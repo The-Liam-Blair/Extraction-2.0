@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
@@ -16,14 +17,11 @@ public class EnemyTurret : Enemy
     // Is the enemy currently charging and about to fire?
     private bool isChargingShot;
 
+    // Stores the angle of the gun's rotation from the start of the charge attack, used to calculate the firing angle of the projectile.
+    private Vector2 AimAngle;
+
     // Like the inherited hurtSprite but for the gun as well, who also has it's own hurt sprite.
     private GameObject gunHurtSprite;
-
-
-    //todo: FOR RED TINT TEXTURING:
-    // If shader method fails: cheap way of emulating: Have child object follow parent, and have child object be a sprite with a red tint. Kept invisible, made briefly
-    // visible when enemy is hurt, does not have collision etc. Used so that other animations will not be interrupted and the hurt effect will still persist.
-    // all in all fuck shaders
 
     private void Awake()
     {
@@ -31,7 +29,7 @@ public class EnemyTurret : Enemy
         gun = gameObject.transform.GetChild(1).gameObject;
         gunHurtSprite = gun.transform.GetChild(0).gameObject;
         ScoreOnDeath = 1000;
-
+        AimAngle = Vector2.zero;
     }
 
     protected override void OnEnable()
@@ -57,10 +55,11 @@ public class EnemyTurret : Enemy
     protected override void Update()
     {
         MoveLeft();
-        
-        if(!isChargingShot) { AimGun(); }
 
-        test_Shoot();
+        if (!isChargingShot) { AimGun(); } // Gun constantly aims at the player until it has expended it's shot.
+
+
+        if (!hasShot && Vector3.Distance(player.transform.position, transform.position) < 100) { Fire(); } // Once player is close enough, fire the gun once. Does not fire again.
     }
 
     protected override void Explode()
@@ -81,6 +80,21 @@ public class EnemyTurret : Enemy
     {
         // Stops call to base.OnExplodeEnd() which will disable the enemy object instance. Makes destroyed turret persist after animation as it has a crumbling animation
         // instead of a disappearing explosion animation.
+    }
+
+    protected override void Attack()
+    {
+        isChargingShot = true;
+        // Instruct the projectile manager to fire a new turret projectile.
+        // Also passes the normalized rotation of the gun so the projectile travels in the aim direction.
+        // todo fix this fucking rubbish
+        // quaternions is humanity's punishment from god
+
+        Debug.DrawRay(gun.transform.position, AimAngle, Color.cyan, 5f);
+
+        AimAngle = (player.transform.position - gun.transform.position).normalized * 50f;
+        projectileLauncher.FireNewProjectile(gun.transform.position, 0, AimAngle);
+
     }
 
     protected override void Hurt()
@@ -131,16 +145,18 @@ public class EnemyTurret : Enemy
     {
         Vector3 playerPos = player.transform.position;
 
-        gun.transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(playerPos.y - gun.transform.position.y, playerPos.x - gun.transform.position.x) * Mathf.Rad2Deg - 135f);
+        // God knows whats happening here but it rotates to face the player so yay (+180 degree offset otherwise it points the wrong way).
+        // Note to self: Make sprites point up (if rotatable) so that they don't need to be rotated 180 degrees to face the player.
+        gun.transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(playerPos.y - gun.transform.position.y, playerPos.x - gun.transform.position.x) * Mathf.Rad2Deg + 180f);
     }
 
-    private void test_Shoot()
+    /// <summary>
+    /// Fire the turret at the player. The turret will only attack once, in which case it will not fire again and will not rotate it's turret to face the player anymore.
+    /// Note that the turret does not fire immediately: this calls the turret to begin charging an attack, which afterwards it will immediately fire.
+    /// </summary>
+    private void Fire()
     {
-        if (!hasShot && Vector3.Distance(player.transform.position, transform.position) < 40)
-        {
-            hasShot = true;
-            isChargingShot = true; // Prevents gun aiming after firing, indicates that the turret is now inactive after firing.
-            GetComponent<Animator>().Play("Fire");
-        }
+       hasShot = true;
+       GetComponent<Animator>().Play("Fire");
     }
 }

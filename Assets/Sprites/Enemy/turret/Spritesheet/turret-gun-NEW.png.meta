@@ -1,0 +1,468 @@
+fileFormatVersion: 2
+guid: 019331aec215d9a42ba1015e4066df5e
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3229203558977352943
+    second: turret-gun-NEW_0
+  - first:
+      213: -2853313905860698649
+    second: turret-gun-NEW_1
+  - first:
+      213: 5781990836342741264
+    second: turret-gun-NEW_2
+  - first:
+      213: -8993591726800786135
+    second: turret-gun-NEW_3
+  - first:
+      213: -1830870173036882569
+    second: turret-gun-NEW_4
+  - first:
+      213: 7604752873529597097
+    second: turret-gun-NEW_5
+  - first:
+      213: -6763454568868033138
+    second: turret-gun-NEW_6
+  - first:
+      213: 4027983767704931433
+    second: turret-gun-NEW_7
+  - first:
+      213: -8859955077363035835
+    second: turret-gun-NEW_8
+  - first:
+      213: -7205782563602081507
+    second: turret-gun-NEW_9
+  - first:
+      213: -6634930766414597449
+    second: turret-gun-NEW_10
+  - first:
+      213: -6218539818812119537
+    second: turret-gun-NEW_11
+  - first:
+      213: -1547010595053666984
+    second: turret-gun-NEW_12
+  - first:
+      213: -4010963043970815303
+    second: turret-gun-NEW_13
+  - first:
+      213: 5531849324113470997
+    second: turret-gun-NEW_14
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: turret-gun-NEW_0
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 1770
+        width: 132
+        height: 52
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 11b4abfd8709f23d0800000000000000
+      internalID: -3229203558977352943
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: turret-gun-NEW_1
+      rect:
+        serializedVersion: 2
+        x: 712
+        y: 1770
+        width: 132
+        height: 52
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ed9d70ce1ef668d0800000000000000
+      internalID: -2853313905860698649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: turret-gun-NEW_2
+      rect:
+        serializedVersion: 2
+        x: 1224
+        y: 1768
+        width: 132
+        height: 52
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 019d5c60802cd3050800000000000000
+      internalID: 5781990836342741264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: turret-gun-NEW_3
+      rect:
+        serializedVersion: 2
+        x: 1736
+        y: 1768
+        width: 132
+        height: 52
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 92da52d79f7503380800000000000000
+      internalID: -8993591726800786135
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: turret-gun-NEW_4
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 1256
+        width: 132
+        height: 52
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 775574a27417796e0800000000000000
+      internalID: -1830870173036882569
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: turret-gun-NEW_5
+      rect:
+        serializedVersion: 2
+        x: 712
+        y: 1256
+        width: 132
+        height: 52
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9acdc5f5272898960800000000000000
+      internalID: 7604752873529597097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: turret-gun-NEW_6
+      rect:
+        serializedVersion: 2
+        x: 1224
+        y: 1256
+        width: 132
+        height: 52
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e8dc02867e16322a0800000000000000
+      internalID: -6763454568868033138
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: turret-gun-NEW_7
+      rect:
+        serializedVersion: 2
+        x: 1736
+        y: 1256
+        width: 132
+        height: 52
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 96c871345e546e730800000000000000
+      internalID: 4027983767704931433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: turret-gun-NEW_8
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 744
+        width: 132
+        height: 52
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5419bd79ccd1b0580800000000000000
+      internalID: -8859955077363035835
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: turret-gun-NEW_9
+      rect:
+        serializedVersion: 2
+        x: 712
+        y: 744
+        width: 132
+        height: 52
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d195bcfafeaeffb90800000000000000
+      internalID: -7205782563602081507
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: turret-gun-NEW_10
+      rect:
+        serializedVersion: 2
+        x: 1224
+        y: 744
+        width: 132
+        height: 52
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b23c8e0f9dfbe3a0800000000000000
+      internalID: -6634930766414597449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: turret-gun-NEW_11
+      rect:
+        serializedVersion: 2
+        x: 1736
+        y: 744
+        width: 132
+        height: 52
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f06e4166bfe43b9a0800000000000000
+      internalID: -6218539818812119537
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: turret-gun-NEW_12
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 232
+        width: 132
+        height: 52
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 85d7f0a6f0ae78ae0800000000000000
+      internalID: -1547010595053666984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: turret-gun-NEW_13
+      rect:
+        serializedVersion: 2
+        x: 712
+        y: 232
+        width: 132
+        height: 52
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ba66eccc523658c0800000000000000
+      internalID: -4010963043970815303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: turret-gun-NEW_14
+      rect:
+        serializedVersion: 2
+        x: 1224
+        y: 234
+        width: 132
+        height: 52
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 516a4cab6a315cc40800000000000000
+      internalID: 5531849324113470997
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 9b12e4c70fc2fed43a195294ef572156
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

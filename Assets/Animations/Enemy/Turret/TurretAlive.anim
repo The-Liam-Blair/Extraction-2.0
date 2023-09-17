@@ -27,7 +27,7 @@ AnimationClip:
     script: {fileID: 0}
   - curve:
     - time: 0
-      value: {fileID: -7878736042973051809, guid: e6877519e48fb604a8ef51f81188f779, type: 3}
+      value: {fileID: -3229203558977352943, guid: 019331aec215d9a42ba1015e4066df5e, type: 3}
     attribute: m_Sprite
     path: Turret Gun
     classID: 212
@@ -55,7 +55,7 @@ AnimationClip:
       isPPtrCurve: 1
     pptrCurveMapping:
     - {fileID: 4770260772560298769, guid: dcadd33893053c540bc5e508b69acf3c, type: 3}
-    - {fileID: -7878736042973051809, guid: e6877519e48fb604a8ef51f81188f779, type: 3}
+    - {fileID: -3229203558977352943, guid: 019331aec215d9a42ba1015e4066df5e, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}

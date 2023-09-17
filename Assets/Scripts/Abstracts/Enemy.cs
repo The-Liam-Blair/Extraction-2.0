@@ -1,5 +1,4 @@
 using System.Collections;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 // Base enemy class implementation.
@@ -134,6 +133,9 @@ public abstract class Enemy : MonoBehaviour
         protected set; // Protected: Only the derived enemy classes can set their own health points. Getter is still public however.
     }
 
+    /// <summary>
+    /// Maximum health of the enemy, used for (re)initialization.
+    /// </summary>
     public int MaxHealth
     {
         get;
@@ -228,6 +230,10 @@ public abstract class Enemy : MonoBehaviour
 
     protected GameObject player;
 
+    // Reference to the enemy projectile manager, used by enemies to fire projectiles.
+    protected EnemyProjectileManager projectileLauncher;
+
+
     public void Start()
     {
         // UNUSED PARTICLE SYSTEM INSTANTIATION: KEPT FOR POTENTIAL FUTURE REFERENCE.
@@ -235,10 +241,12 @@ public abstract class Enemy : MonoBehaviour
         //SmokeParticle = Resources.Load("P_Smoke") as GameObject;
         //FlameParticle = Resources.Load("P_Fire") as GameObject;
 
-        player = GameObject.FindGameObjectWithTag("Player"); // Faster to search via tag than search via object names due to reduced search space.
+        player = GameObject.FindGameObjectWithTag("Player");
 
         // Fetch hurt sprite, which is the 1st child of each enemy.
         hurtSprite = transform.GetChild(0).gameObject;
+
+        projectileLauncher = GameObject.Find("_GAMEMANAGER").GetComponent<EnemyProjectileManager>();
     }
 
     /// <summary>
@@ -272,7 +280,7 @@ public abstract class Enemy : MonoBehaviour
     }
     
     /// <summary>
-    /// Handle collision with entities, namely with collisions with the player, player projectiles and terrain.
+    /// Handle collision with entities, mainly with collisions with the player, player projectiles and terrain.
     /// Also handles damaging events, such as taking fatal or non-fatal damage.
     /// </summary>
     /// <param name="other">The other object which this enemy collided with.</param>
@@ -334,7 +342,7 @@ public abstract class Enemy : MonoBehaviour
         GetComponent<Animator>().Play("Explode");
     }
 
-    
+
     /// <summary>
     /// Called by the animator component when an enemy's explosion animation completes: disable the enemy.
     /// </summary>
@@ -348,11 +356,11 @@ public abstract class Enemy : MonoBehaviour
     /// <summary>
     /// Called by the animator component when the enemy will execute an attack (May or may not require charging).
     /// </summary>
-    protected virtual void Attack() { Debug.Log("kek"); }
+    protected virtual void Attack() { Debug.Log("ATTACK UNIMPLEMENTED FOR " + name + "!"); }
 
     
     /// <summary>
-    /// Enemy takes non-fatal damage -> Set a hurt sprite active which overlaps the normal enemy sprite to indicate damage was taken.
+    /// Enemy takes non-fatal damage -> Set the hurt sprite active which overlaps the normal enemy sprite to indicate damage was taken.
     /// By loading a sprite over the enemy, the enemy's animations will be uninterrupted, and so any animations can seamlessly play while taking damage.
     /// </summary>
     protected virtual void Hurt() { hurtSprite.SetActive(true); Invoke("HurtFinish", 0.05f); }
@@ -362,6 +370,11 @@ public abstract class Enemy : MonoBehaviour
     /// Called by the Hurt method after a very short delay to remove the hurt sprite to show the enemy again.
     /// </summary>
     protected virtual void HurtFinish() { hurtSprite.SetActive(false); }
+
+    /// <summary>
+    /// Public function that can be called by other scripts to detonate the enemy without having to call the Explode() function.
+    /// </summary>
+    public void ExplodeEnemy() { Explode(); }
 
 
     // UNUSED PARTICLE CALLS: KEPT FOR (POTENTIAL) FUTURE REFERENCE.

@@ -24,7 +24,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private GameObject playerBullet;
 
     // Object pool of tiles and pointer for it.
-    private readonly GameObject[] pBulletPool = new GameObject[64];
+    private GameObject[] pBulletPool = new GameObject[64];
     private byte pBulletPointer = 0;
 
     // Cooldown determines the fire rate of the player's weapon.

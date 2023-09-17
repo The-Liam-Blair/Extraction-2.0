@@ -42,7 +42,7 @@ public class GenerateEnemies : MonoBehaviour
             // Generate 16 game objects of that enemy type for the enemy pool.
             // Because of how objects are instantiated, the enemies are created and grouped in order of appearance in the enemy prefab
             // list.
-            for (int j = 0; j < 16; j++)
+            for (int j = 0; j < 32; j++)
             {
                 Enemies[i].Add(Instantiate(EnemyPrefabs[i], new Vector3(-1, -1, 0), Quaternion.identity));
                 Enemies[i][j].transform.SetParent(GameObject.Find("_ENEMYMANAGER").transform, true);
@@ -71,8 +71,8 @@ public class GenerateEnemies : MonoBehaviour
 
                 // Turret enemy...
                 case "Turret":
-                    EnemySpawnCooldowns.Add(5);
-                    EnemySpawnCooldownsReset.Add(5);
+                    EnemySpawnCooldowns.Add(1);
+                    EnemySpawnCooldownsReset.Add(1);
                     break;
 
                 // repeat for each enemy type...
