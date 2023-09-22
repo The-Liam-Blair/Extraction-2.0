@@ -4,16 +4,19 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-//todo: afterthought: Primary and Secondary customisable weapons.
+//todo: potential primary and secondary customizable weapons (for later in development).
 // PRIMARIES:
 //  - Automatic High spread, low damage autocannon (Current).
 //  - High speed, explosive, medium damage, slow firing rocket launcher.
 //  - Slow speed, high damage, piercing, slow firing laser cannon.
+//  - Multi-projectile, low range, devastating at close range.
+//  - Slow firing, medium damage, arcing projectile which bounces off terrain, enemies and screen boundaries.
 
 // SECONDARIES:
-//  - Extremely high damage, slow reload, slow moving bomb bay.
-//  - Low damage, high spread, medium fire rate automated small machine gun.
-//  - Shield battery (Player shield is wider and respawns quicker after firing).
+//  - Extremely high damage bomb bay which glides downwards and forwards.
+//  - Upgrade to player shield which widens it's arc and reactivates faster after pimrary weapon usage.
+//  - Extremely short duration, medium cooldown ship phase that allows the player to pass through enemy ships and projectiles (Like Dark Souls rolling).
+//  - Medium cooldown short range teleportation in the current direction of travel (Defaults to backwards).
 
 public class PlayerCombat : MonoBehaviour
 {
@@ -21,7 +24,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private GameObject playerBullet;
 
     // Object pool of tiles and pointer for it.
-    private readonly GameObject[] pBulletPool = new GameObject[64];
+    private GameObject[] pBulletPool = new GameObject[64];
     private byte pBulletPointer = 0;
 
     // Cooldown determines the fire rate of the player's weapon.
@@ -61,7 +64,7 @@ public class PlayerCombat : MonoBehaviour
         Cooldown -= Time.deltaTime;
     }
 
-    // Can only be called from the PlayerMovement script, a projectile is fired by the player.
+    // Called from the PlayerMovement script, a projectile is fired by the player.
     public void GenerateProjectile(Vector3 playerPos)
     {
         // Select the next bullet within the bullet pool, reset it's position to the player's position and fire it (set it active).

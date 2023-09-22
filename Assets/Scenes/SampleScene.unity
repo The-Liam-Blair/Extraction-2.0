@@ -257,15 +257,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6672448693859184866, guid: 27afe5363c6f386488d00ee90ef36d18, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 45.3
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 6672448693859184866, guid: 27afe5363c6f386488d00ee90ef36d18, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 82.2
+      value: 77.56
       objectReference: {fileID: 0}
     - target: {fileID: 6672448693859184866, guid: 27afe5363c6f386488d00ee90ef36d18, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 6672448693859184866, guid: 27afe5363c6f386488d00ee90ef36d18, type: 3}
       propertyPath: m_LocalRotation.w
@@ -370,6 +370,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4017355681476080854, guid: 27ec35d0239ea5d4f913bf8095aec14a, type: 3}
+    - {fileID: 4014298748861859491, guid: 27ec35d0239ea5d4f913bf8095aec14a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 27ec35d0239ea5d4f913bf8095aec14a, type: 3}
 --- !u!1 &980190778 stripped
 GameObject:
@@ -390,6 +391,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EnemyPrefabs:
   - {fileID: 6988309100383810464, guid: a03f0c7a91367674a8b65dd13f42d1c8, type: 3}
+  - {fileID: 4411836696180052811, guid: 97b9292e8ed561a4db3417c68ad5c334, type: 3}
+  EnemySpawnCooldowns: []
+  EnemySpawnCooldownsReset: []
+  EnemySpawnPointers: 
+  SmokeParticle: {fileID: 1948047667001432766, guid: 03907524988bf8d44bccc6ab48a87cb7, type: 3}
+  FlameParticle: {fileID: 2016554632992242312, guid: e547c43d3674f4240a0962f22f2beffd, type: 3}
+--- !u!1 &1368666335
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1368666336}
+  m_Layer: 0
+  m_Name: _ENEMYPROJECTILE
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1368666336
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1368666335}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1923169450}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1733086026
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -405,6 +442,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 4014298748861859491, guid: 27ec35d0239ea5d4f913bf8095aec14a, type: 3}
+      propertyPath: turretBullet
+      value: 
+      objectReference: {fileID: 7299451447429633197, guid: 45aaddb025265394ba7144d6cb818b18, type: 3}
     - target: {fileID: 6484819139521056109, guid: 27ec35d0239ea5d4f913bf8095aec14a, type: 3}
       propertyPath: m_Color.b
       value: 1

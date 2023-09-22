@@ -7,14 +7,15 @@ TagManager:
   - Terrain
   - Enemy
   - PlayerProjectile
+  - EnemyProjectile
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ignore Collision
   - Water
   - UI
-  - 
+  - Terrain
   - 
   - 
   - 

@@ -11,9 +11,9 @@ using Random = UnityEngine.Random;
 public class GenerateFloor : MonoBehaviour
 {
     [SerializeField] private GameObject floorTile;
-
-    // Object pool of tiles: set to 128 for efficiency.
-    private readonly GameObject[] tilePool = new GameObject[128];
+    
+    // Object pool of tiles: set to 258 for efficient bit storage
+    private readonly GameObject[] tilePool = new GameObject[256];
     // Points to the next-selected tile in the tile pool, to allow reuse of the tile objects in the pool. Byte used for maximum storage efficiency.
     private byte poolPointer = 0;
 
@@ -22,35 +22,52 @@ public class GenerateFloor : MonoBehaviour
     // Holds the current y position for generating floor tiles. Varies throughout game play to create uneven terrain.
     private int CurrentFloorYPos = -90;
 
-    // Spawn width (x) position for all tiles and enemies, just outside of the camera's view.
-    private const float SPAWNPOINT_WIDTH = 550.0f;
+    // Spawn position (x axis) for all tiles and enemies, just outside of the camera's view.
+    private const int SPAWNPOINT_WIDTH = 550;
+    
     // Height value boundaries for both standard terrain and hills.
-    private const float TERRAIN_MAX_HEIGHT = -60;
-    private const float TERRAIN_MIN_HEIGHT = -130;
-    private const float HILLS_MAX_HEIGHT = -70;
-    private const float HILLS_MIN_HEIGHT = -110;
+    private const int TERRAIN_MAX_HEIGHT = -60;
+    private const int TERRAIN_MIN_HEIGHT = -130;
+    private const int HILLS_MAX_HEIGHT = -70;
+    private const int HILLS_MIN_HEIGHT = -110;
 
     // Timer that checks if a hill is being drawn currently. Negative/0.0 indicates no hill is being drawn.
     // >4.0 indicates an upward slope is being drawn, while <4.0 indicates a downward slope is being drawn.
     private float HillTerrainTimer = 0.0f;
+    
     // Timer that prevents the height of terrain from changing. Used normally to set a small flat piece of land to spawn an enemy without it clipping
     // into the ground.
     private float FlatTerrainTimer = 0.0f;
 
-    private void Start()
+    private void Awake()
     {
         // For each tile in the tile pool:
-        // - Calculate the new y position of the current tile. Used to generate initially uneven terrain rather than oddly flat terrain on level start.
+        // - Calculate the new y position of the current tile. Used to generate unique terrain on level start instead of pre-determined terrain.
         // - Instantiate the object (with pre-attached update script to make it move).
         // - Spread out each tile on the x axis, and randomly generate y axis using the standard random height generator to populate the game with 
         //   an already-built ground.
-        for (var i = 0; i < tilePool.Length; i++)
+
+        // Only first 141 tiles are spawned and placed as that is required to display enough flooring to fill the screen plus a small buffer off screen to account for
+        // gameplay mechanics like placing grounded enemies.
+        for (var i = 0; i < 141; i++)
         {
             CalculateNewYPos();
             tilePool[i] = Instantiate(floorTile, new Vector3(-1, -1, 0), Quaternion.identity);
-            tilePool[i].transform.position = new Vector3(i*4.5f, CurrentFloorYPos, 0);
+            tilePool[i].transform.position = new Vector3(i * 4f, CurrentFloorYPos, 0);
             tilePool[i].transform.SetParent(GameObject.Find("_FLOOR").transform, true);
             tilePool[i].name = "FloorTile [" + i + "]";
+        }
+        
+        // With 141 objects placed, pool pointer initializes to the 142nd object from the start.
+        poolPointer = 141;
+
+        // Spawn the excess tiles, but disable them after as they are currently not needed (Will be used later on during the game).
+        for (var i = 141; i < tilePool.Length; i++)
+        {
+            tilePool[i] = Instantiate(floorTile, new Vector3(-1, -1, 0), Quaternion.identity);
+            tilePool[i].transform.SetParent(GameObject.Find("_FLOOR").transform, true);
+            tilePool[i].name = "FloorTile [" + i + "]";
+            tilePool[i].SetActive(false);
         }
     }
 
@@ -60,7 +77,7 @@ public class GenerateFloor : MonoBehaviour
         // When the interval for drawing a new section of the floor has expired...
         if (floorDrawDelay <= 0)
         {
-            // Roll 1/100 chance to draw a hill. If successful, add time to the hill draw timer.
+            // Roll 1/100 chance to draw a hill everytime a new floor tile needs to be teleported in. If successful, add time to the hill draw timer.
             switch (Random.Range(0, 101))
             {
                 case 0:
@@ -174,8 +191,9 @@ public class GenerateFloor : MonoBehaviour
     /// Generate purposely flat terrain. Overrides the creation of all other terrain, as it's normally used to prepare terrain for an enemy structure or weapon
     /// to sit on.
     /// </summary>
-    public void GenerateFlatTerrain()
+    /// <param name="duration">Time to draw the flat terrain for in seconds. Defaults to 0.5 if no input is provided.</param>
+    public void GenerateFlatTerrain(float duration = 0.5f)
     {
-        FlatTerrainTimer = 3.0f;
+        FlatTerrainTimer = duration;
     }
 }
