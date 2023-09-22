@@ -76,22 +76,16 @@ public class EnemyTurret : Enemy
         base.OnChargeEnd();
     }
 
-    protected override void OnExplodeEnd()
-    {
-        // Stops call to base.OnExplodeEnd() which will disable the enemy object instance. Makes destroyed turret persist after animation as it has a crumbling animation
-        // instead of a disappearing explosion animation.
-    }
+    // Stops call to base.OnExplodeEnd() which will disable the enemy object instance. Makes destroyed turret persist after animation as it has a crumbling animation
+    // instead of a disappearing explosion animation.
+    protected override void OnExplodeEnd() {}
 
     protected override void Attack()
     {
         isChargingShot = true;
+        
         // Instruct the projectile manager to fire a new turret projectile.
-        // Also passes the normalized rotation of the gun so the projectile travels in the aim direction.
-        // todo fix this fucking rubbish
-        // quaternions is humanity's punishment from god
-
-        Debug.DrawRay(gun.transform.position, AimAngle, Color.cyan, 5f);
-
+        // Also passes the Vector object that represents the firing angle, which is normalized and directed at the player's location.
         AimAngle = (player.transform.position - gun.transform.position).normalized * 50f;
         projectileLauncher.FireNewProjectile(gun.transform.position, 0, AimAngle);
 
@@ -99,7 +93,8 @@ public class EnemyTurret : Enemy
 
     protected override void Hurt()
     {
-        gunHurtSprite.SetActive(true); Invoke("HurtTurretGunFinish", 0.05f);
+        gunHurtSprite.SetActive(true); 
+        Invoke("HurtTurretGunFinish", 0.05f);
         base.Hurt();
     }
 
@@ -120,8 +115,8 @@ public class EnemyTurret : Enemy
             Vector3.down,
             500f,
             LayerMask.GetMask("Terrain"));
-        
-        return hit.point.y + 5f;
+
+        return hit.point.y + 5f; // +5 to account for the turret's height.
     }
 
     /// <summary>

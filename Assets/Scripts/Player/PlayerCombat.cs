@@ -64,7 +64,7 @@ public class PlayerCombat : MonoBehaviour
         Cooldown -= Time.deltaTime;
     }
 
-    // Can only be called from the PlayerMovement script, a projectile is fired by the player.
+    // Called from the PlayerMovement script, a projectile is fired by the player.
     public void GenerateProjectile(Vector3 playerPos)
     {
         // Select the next bullet within the bullet pool, reset it's position to the player's position and fire it (set it active).

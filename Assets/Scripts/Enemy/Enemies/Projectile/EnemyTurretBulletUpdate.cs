@@ -8,16 +8,14 @@ public class EnemyTurretBulletUpdate : MonoBehaviour
     
     private void OnBecameInvisible()
     {
-        // When bullet is off-screen, disable it again so it cannot collide with objects off-screen and removes the need
-        // to update the projectile for efficiency.
+        // When bullet is off-screen, disable it as it's no longer useful.
         gameObject.SetActive(false);
     }
 
     private void Start()
     {
-        // Firing angle is normalized: scale it to set it's speed.
+        // Firing angle is normalized: scaled to set its speed.
         gameObject.GetComponent<Rigidbody2D>().velocity = firingAngle * 3f;
-        Debug.Log("Firing angle: " + firingAngle);
     }
 
     private void OnCollisionEnter2D(Collision2D other)

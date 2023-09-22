@@ -22,17 +22,19 @@ public class GenerateFloor : MonoBehaviour
     // Holds the current y position for generating floor tiles. Varies throughout game play to create uneven terrain.
     private int CurrentFloorYPos = -90;
 
-    // Spawn width (x) position for all tiles and enemies, just outside of the camera's view.
-    private const float SPAWNPOINT_WIDTH = 550.0f;
+    // Spawn position (x axis) for all tiles and enemies, just outside of the camera's view.
+    private const int SPAWNPOINT_WIDTH = 550;
+    
     // Height value boundaries for both standard terrain and hills.
-    private const float TERRAIN_MAX_HEIGHT = -60;
-    private const float TERRAIN_MIN_HEIGHT = -130;
-    private const float HILLS_MAX_HEIGHT = -70;
-    private const float HILLS_MIN_HEIGHT = -110;
+    private const int TERRAIN_MAX_HEIGHT = -60;
+    private const int TERRAIN_MIN_HEIGHT = -130;
+    private const int HILLS_MAX_HEIGHT = -70;
+    private const int HILLS_MIN_HEIGHT = -110;
 
     // Timer that checks if a hill is being drawn currently. Negative/0.0 indicates no hill is being drawn.
     // >4.0 indicates an upward slope is being drawn, while <4.0 indicates a downward slope is being drawn.
     private float HillTerrainTimer = 0.0f;
+    
     // Timer that prevents the height of terrain from changing. Used normally to set a small flat piece of land to spawn an enemy without it clipping
     // into the ground.
     private float FlatTerrainTimer = 0.0f;
@@ -44,13 +46,28 @@ public class GenerateFloor : MonoBehaviour
         // - Instantiate the object (with pre-attached update script to make it move).
         // - Spread out each tile on the x axis, and randomly generate y axis using the standard random height generator to populate the game with 
         //   an already-built ground.
-        for (var i = 0; i < tilePool.Length; i++)
+
+        // Only first 141 tiles are spawned and placed as that is required to display enough flooring to fill the screen plus a small buffer off screen to account for
+        // gameplay mechanics like placing grounded enemies.
+        for (var i = 0; i < 141; i++)
         {
             CalculateNewYPos();
             tilePool[i] = Instantiate(floorTile, new Vector3(-1, -1, 0), Quaternion.identity);
-            tilePool[i].transform.position = new Vector3(i*3.5f, CurrentFloorYPos, 0);
+            tilePool[i].transform.position = new Vector3(i * 4f, CurrentFloorYPos, 0);
             tilePool[i].transform.SetParent(GameObject.Find("_FLOOR").transform, true);
             tilePool[i].name = "FloorTile [" + i + "]";
+        }
+        
+        // With 141 objects placed, pool pointer initializes to the 142nd object from the start.
+        poolPointer = 141;
+
+        // Spawn the excess tiles, but disable them after as they are currently not needed (Will be used later on during the game).
+        for (var i = 141; i < tilePool.Length; i++)
+        {
+            tilePool[i] = Instantiate(floorTile, new Vector3(-1, -1, 0), Quaternion.identity);
+            tilePool[i].transform.SetParent(GameObject.Find("_FLOOR").transform, true);
+            tilePool[i].name = "FloorTile [" + i + "]";
+            tilePool[i].SetActive(false);
         }
     }
 

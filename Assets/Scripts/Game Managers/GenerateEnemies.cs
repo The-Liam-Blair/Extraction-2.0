@@ -42,7 +42,7 @@ public class GenerateEnemies : MonoBehaviour
             // Generate 16 game objects of that enemy type for the enemy pool.
             // Because of how objects are instantiated, the enemies are created and grouped in order of appearance in the enemy prefab
             // list.
-            for (int j = 0; j < 32; j++)
+            for (int j = 0; j < 16; j++)
             {
                 Enemies[i].Add(Instantiate(EnemyPrefabs[i], new Vector3(-1, -1, 0), Quaternion.identity));
                 Enemies[i][j].transform.SetParent(GameObject.Find("_ENEMYMANAGER").transform, true);
@@ -55,6 +55,8 @@ public class GenerateEnemies : MonoBehaviour
         //
         // Like the enemy pool, the cooldowns list is populated in order of the enemy prefabs list, which means it will
         // match the ordering of the enemy pool.
+        //
+        // For each enemy type, there is an associated pool pointer (to the enemy list), cooldown timer, and cooldown reset value.
         for (int i = 0; i < Enemies.Count; i++)
         {
             EnemySpawnPointers.Add(0);
@@ -71,8 +73,8 @@ public class GenerateEnemies : MonoBehaviour
 
                 // Turret enemy...
                 case "Turret":
-                    EnemySpawnCooldowns.Add(1);
-                    EnemySpawnCooldownsReset.Add(1);
+                    EnemySpawnCooldowns.Add(8);
+                    EnemySpawnCooldownsReset.Add(8);
                     break;
 
                 // repeat for each enemy type...
@@ -91,7 +93,7 @@ public class GenerateEnemies : MonoBehaviour
             // If the cooldown for that enemy is below 0, it can be spawned, so...
             if (EnemySpawnCooldowns[i] < 0)
             {
-                // - Make that enemy active again so it will update.
+                // - Make a new enemy of that type active again so it will update.
                 // - Increment the pointer for that enemy type.
                 // - Reset the cooldown to the starter value.
                 //
@@ -102,14 +104,13 @@ public class GenerateEnemies : MonoBehaviour
 
                 // Increment the pool pointer and reset it's position if it overflows.
                 EnemySpawnPointers[i]++;
-                if (EnemySpawnPointers[i] > 15)
-                {
-                    EnemySpawnPointers[i] = 0;
-                }
+                if (EnemySpawnPointers[i] > 15) { EnemySpawnPointers[i] = 0; }
 
                 // Reset spawn cooldown to the reset value. (+/- 50% for a bit of randomness)
                 EnemySpawnCooldowns[i] = EnemySpawnCooldownsReset[i] + Random.Range(EnemySpawnCooldownsReset[i] * -0.5f, EnemySpawnCooldownsReset[i] * 0.5f);
             }
+
+            Debug.Log("Mine cooldown:" + EnemySpawnCooldowns[0] + " Turret cooldown:" + EnemySpawnCooldowns[1]);
         }
 
         // For each enemy type, decrement it's spawn timer by dt.

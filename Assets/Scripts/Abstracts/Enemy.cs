@@ -228,6 +228,12 @@ public abstract class Enemy : MonoBehaviour
     /// </summary>
     protected const int CameraRight = 500;
 
+    /// <summary>
+    /// Despawn point of the enemy (If it survived that long).
+    /// 35 is the x position just outside the leftmost camera boundaries.
+    /// </summary>
+    protected const int CameraLeft = 35;
+
     protected GameObject player;
 
     // Reference to the enemy projectile manager, used by enemies to fire projectiles.
@@ -266,11 +272,12 @@ public abstract class Enemy : MonoBehaviour
     /// </summary>
     protected void OnBecameInvisible()
     {
-        // Don't deactivate objects on the rightmost side of the screen, which have just re-spawned.
-        if (transform.position.x > 350 | transform.position.x > -50) { return; }
-
-        hurtSprite.SetActive(false);
-        gameObject.SetActive(false);
+        // Only despawn enemies that pass the leftmost screen boundary.
+        if (transform.position.x < CameraLeft)
+        {
+            hurtSprite.SetActive(false);
+            gameObject.SetActive(false);
+        }
     }
 
     
