@@ -73,8 +73,8 @@ public class GenerateEnemies : MonoBehaviour
 
                 // Turret enemy...
                 case "Turret":
-                    EnemySpawnCooldowns.Add(8);
-                    EnemySpawnCooldownsReset.Add(8);
+                    EnemySpawnCooldowns.Add(8f);
+                    EnemySpawnCooldownsReset.Add(8f);
                     break;
 
                 // repeat for each enemy type...

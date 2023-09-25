@@ -86,9 +86,9 @@ public class EnemyTurret : Enemy
         
         // Instruct the projectile manager to fire a new turret projectile.
         // Also passes the Vector object that represents the firing angle, which is normalized and directed at the player's location.
-        AimAngle = (player.transform.position - gun.transform.position).normalized * 50f;
+        AimAngle = (player.transform.position - gun.transform.position).normalized;
 
-        var velocityScalar = 3;
+        var velocityScalar = 100;
         projectileLauncher.FireNewProjectile(gun.transform.position, 0, AimAngle, velocityScalar);
 
     }

@@ -7,20 +7,18 @@ public class PlayerMinigunProjectile : Projectile
     // Determines the deviation for each shot fired. Determined each time the bullet is enabled/fired.
     private float yDeviation;
 
-    // Runs each time the object is activated.
-    private void OnEnable()
+    protected override void OnEnable()
     {
-        // Determine the new deviation value for this bullet when it's fired. Changes every time the bullet is re-enabled.
-        yDeviation = Random.Range(-0.1f, 0.1f);
-    }
+        base.OnEnable();
 
-    protected override void Start()
-    {
+        // Determine the new deviation value for this bullet when it's fired. Changes every time the bullet is re-enabled.
+        yDeviation = Random.Range(-0.09f, 0.09f);
+
         // temp
         Angle = new Vector2(1, yDeviation);
         Angle.Normalize();
-        Velocity = 3000;
+        Velocity = 75;
 
-        gameObject.GetComponent<Rigidbody2D>().velocity = Angle * Velocity * Time.fixedDeltaTime;
+        gameObject.GetComponent<Rigidbody2D>().velocity = Angle * Velocity;
     }
 }

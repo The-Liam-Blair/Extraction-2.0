@@ -20,6 +20,7 @@ public abstract class Projectile : MonoBehaviour
         PlayerProjectile,
         Terrain,
         EnemyProjectile,
+        EnemyIndestructibleProjectile,
         Enemy
     };
 
@@ -37,9 +38,14 @@ public abstract class Projectile : MonoBehaviour
     }
 
     /// <summary>
-    /// Each projectile requires a start function, primarily to give it an initial velocity.
+    /// Each projectile requires an OnEnable function, primarily to give it an initial velocity.
+    /// OnEnable is called each time it's re-enabled, so Start() can't be used (since it's called only once).
     /// </summary>
-    protected virtual void Start() {}
+    protected virtual void OnEnable()
+    {
+        gameObject.GetComponent<Collider2D>().enabled = false;
+        StartCoroutine(DisableInitialCollisions());
+    }
 
 
     /// <summary>
@@ -96,7 +102,6 @@ public abstract class Projectile : MonoBehaviour
                     other.gameObject.SetActive(false);
                     break;
 
-
                 // Projectile hit terrain
                 case collisionType.Terrain:
 
@@ -115,5 +120,15 @@ public abstract class Projectile : MonoBehaviour
     {
         Angle = angle;
         Velocity = velocity;
+    }
+
+    /// <summary>
+    /// When a projectile of any type is spawned, it's collider is enabled after a very short delay to prevent it from colliding with the object that spawned it.
+    /// </summary>
+    IEnumerator DisableInitialCollisions()
+    {
+        yield return new WaitForSeconds(0.1f);
+        gameObject.GetComponent<Collider2D>().enabled = true;
+        yield return null;
     }
 }
