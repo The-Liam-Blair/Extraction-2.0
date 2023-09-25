@@ -109,8 +109,6 @@ public class GenerateEnemies : MonoBehaviour
                 // Reset spawn cooldown to the reset value. (+/- 50% for a bit of randomness)
                 EnemySpawnCooldowns[i] = EnemySpawnCooldownsReset[i] + Random.Range(EnemySpawnCooldownsReset[i] * -0.5f, EnemySpawnCooldownsReset[i] * 0.5f);
             }
-
-            Debug.Log("Mine cooldown:" + EnemySpawnCooldowns[0] + " Turret cooldown:" + EnemySpawnCooldowns[1]);
         }
 
         // For each enemy type, decrement it's spawn timer by dt.

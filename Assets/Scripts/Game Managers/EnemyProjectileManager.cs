@@ -35,7 +35,7 @@ public class EnemyProjectileManager : MonoBehaviour
     /// <param name="enemyPos">Position of the enemy (To set the projectile spawn location).</param>
     /// <param name="projectileType">Identifier that's used to determine which pool to use, and so which projectile to fire.</param>
     /// <param name="direction">Direction the projectile will move.</param>
-    public void FireNewProjectile(Vector3 enemyPos, int projectileType, Vector2 direction)
+    public void FireNewProjectile(Vector3 enemyPos, int projectileType, Vector2 direction, int velocity)
     {
         switch (projectileType)
         {
@@ -43,7 +43,7 @@ public class EnemyProjectileManager : MonoBehaviour
             case 0:
                 tBulletPool[tBulletPointer].transform.position = enemyPos + (Vector3) direction * 0.25f;
                 tBulletPool[tBulletPointer].SetActive(true);
-                tBulletPool[tBulletPointer].GetComponent<EnemyTurretBulletUpdate>().SetFiringAngle(direction);
+                tBulletPool[tBulletPointer].GetComponent<EnemyTurretProjectile>().Init(direction, velocity);
 
                 tBulletPointer++;
                 if (tBulletPointer > tBulletPool.Length) { tBulletPointer = 0; }

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -4801217389420572032}
   m_Layer: 0
   m_Name: Bullet
-  m_TagString: Untagged
+  m_TagString: PlayerProjectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -94,7 +94,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 530210526588447664}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35e00ca81d0cfda44b737bdd448609c3, type: 3}
+  m_Script: {fileID: 11500000, guid: fbbbb5a12c0fb514d9e856186f4d85d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!70 &1158817767505685999
@@ -124,7 +124,7 @@ Rigidbody2D:
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 1
+  m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0

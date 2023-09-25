@@ -80,27 +80,26 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
+    public void HurtPlayer()
+    {
+        // Collided with enemy, resist damage if invulnerable.
+        if (invulnerableTimer < 0f)
+        {
+            // If fatal damage, go to lose game scene.
+            health--;
+            if (health <= 0) { SceneManager.LoadScene("LoseGame"); }
+
+            // Else, player becomes immune to all damage for a period of time (Except collisions with terrain) and flashes during this time frame.
+            invulnerableTimer = 5.25f;
+            StartCoroutine(InvulnerableVisual());
+        }
+    }
+
     void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.transform.tag.Equals("Terrain") || 
-            other.transform.tag.Equals("Enemy")   ||
-            other.transform.tag.Equals("EnemyProjectile"))
-        {
-            // Collided with terrain
-            if (other.gameObject.tag.Equals("Terrain"))  { SceneManager.LoadScene("LoseGame"); }
-            
-            // Collided with enemy or enemy projectile, resist damage if invulnerable.
-            else if (invulnerableTimer < 0f) /** && if tag == "Enemy" || tag == "EnemyProjectile" **/
-            {
-                // If fatal damage, go to lose game scene.
-                health--;
-                if (health <= 0) { SceneManager.LoadScene("LoseGame"); }
-
-                // Else, player becomes immune to all damage for a period of time (Except collisions with terrain) and flashes during this time frame.
-                invulnerableTimer = 5.25f;
-                StartCoroutine(InvulnerableVisual());
-            }
-        }
+        // Flew into terrain : Death
+        if (other.gameObject.tag.Equals("Terrain")) { SceneManager.LoadScene("LoseGame"); }
+        else if(other.gameObject.tag.Equals("Enemy")) { HurtPlayer();}
     }
 
     // CO-ROUTINE

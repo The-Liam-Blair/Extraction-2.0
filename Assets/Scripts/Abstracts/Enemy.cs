@@ -285,10 +285,24 @@ public abstract class Enemy : MonoBehaviour
     {
         hurtSprite.SetActive(false);
     }
+
+    /// <summary>
+    /// Enemy receives damage from an attack. Fatal attacks (Those that sets the enemy's health to or below 0) will destroy the enemy.
+    /// </summary>
+    /// <param name="incomingDamage">Amount of health damage the incoming attack inflicts</param>
+    public void HurtEnemy(int incomingDamage)
+    {
+        // Enemy ignores damage if it's already going through the destruction process.
+        if (isExploding) { return; }
+
+        Health -= incomingDamage;
+
+        if (Health <= 0) { Explode(); }
+        else { Hurt(); }
+    }
     
     /// <summary>
-    /// Handle collision with entities, mainly with collisions with the player, player projectiles and terrain.
-    /// Also handles damaging events, such as taking fatal or non-fatal damage.
+    /// Handle collision with non-projectile entities, primarily collisions with other enemy entities, the player and terrain.
     /// </summary>
     /// <param name="other">The other object which this enemy collided with.</param>
     protected void OnCollisionEnter2D(Collision2D other)
@@ -298,14 +312,6 @@ public abstract class Enemy : MonoBehaviour
 
         switch (other.gameObject.tag)
         {
-            // Hit by player projectile: inflict projectile damage. Run hurt or explode functions as necessary.
-            case "PlayerProjectile":
-                Health -= GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCombat>().Damage;
-
-                if (Health <= 0) { Explode(); }
-                else { Hurt(); }
-                break;
-
             // Hit by player ship directly: Explode immediately. Collision detection on player side will handle player damage.
             case "Player":
                 Explode();
