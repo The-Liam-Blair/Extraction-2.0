@@ -127,12 +127,11 @@ public class EnemyTurret : Enemy
     /// </summary>
     IEnumerator SetTurretYPos()
     {
-        GameObject.Find("_GAMEMANAGER").GetComponent<GenerateFloor>().GenerateFlatTerrain(1f); // Ensure terrain under turret is flat to minimize clipping.
-        yield return new WaitForSeconds(1); // Wait for flat terrain to spawn.
+        GameObject.Find("_GAMEMANAGER").GetComponent<GenerateFloor>().GenerateFlatTerrain(1.5f); // Ensure terrain under turret is flat to minimize clipping.
+        yield return new WaitForSeconds(0.75f); // Wait for flat terrain to spawn.
         transform.position = new Vector2(transform.position.x,
             GetYFloorPosition()); // Find correct position to place the turret by performing a downwards ray cast, which is the flat terrain below.
         yield return null;
-
     }
 
     /// <summary>

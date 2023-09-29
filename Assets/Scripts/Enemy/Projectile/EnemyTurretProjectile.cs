@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class EnemyTurretProjectile : Projectile
 {
-    protected override void OnEnable()
+    protected override void Update()
     {
-        base.OnEnable();
-        gameObject.GetComponent<Rigidbody2D>().velocity = Angle * Velocity;
+        // Move the bullet in the direction of the angle vector.
+        transform.Translate(Angle * Velocity * Time.deltaTime);
     }
 }

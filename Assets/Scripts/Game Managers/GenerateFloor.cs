@@ -52,7 +52,7 @@ public class GenerateFloor : MonoBehaviour
         for (var i = 0; i < 141; i++)
         {
             CalculateNewYPos();
-            tilePool[i] = Instantiate(floorTile, new Vector3(-1, -1, 0), Quaternion.identity);
+            tilePool[i] = Instantiate(floorTile, new Vector3(-1, -1, -1), Quaternion.identity);
             tilePool[i].transform.position = new Vector3(i * 4f, CurrentFloorYPos, 0);
             tilePool[i].transform.SetParent(GameObject.Find("_FLOOR").transform, true);
             tilePool[i].name = "FloorTile [" + i + "]";
@@ -64,7 +64,7 @@ public class GenerateFloor : MonoBehaviour
         // Spawn the excess tiles, but disable them after as they are currently not needed (Will be used later on during the game).
         for (var i = 141; i < tilePool.Length; i++)
         {
-            tilePool[i] = Instantiate(floorTile, new Vector3(-1, -1, 0), Quaternion.identity);
+            tilePool[i] = Instantiate(floorTile, new Vector3(-1, -1, -1), Quaternion.identity);
             tilePool[i].transform.SetParent(GameObject.Find("_FLOOR").transform, true);
             tilePool[i].name = "FloorTile [" + i + "]";
             tilePool[i].SetActive(false);
@@ -108,7 +108,7 @@ public class GenerateFloor : MonoBehaviour
         CalculateNewYPos();
         // Teleport the terrain last in the pool queue (Which would be in an inactive state) to the rightmost section of the screen and set it active
         // again to make it move again. Also increment the pointer that tracks the current position for the pool of terrain objects.
-        tilePool[poolPointer].transform.position = new Vector3(SPAWNPOINT_WIDTH, CurrentFloorYPos, 0);
+        tilePool[poolPointer].transform.position = new Vector3(SPAWNPOINT_WIDTH, CurrentFloorYPos, 100);
         tilePool[poolPointer].SetActive(true);
         poolPointer++;
 

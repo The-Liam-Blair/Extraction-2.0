@@ -24,7 +24,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private GameObject playerBullet;
 
     // Object pool of tiles and pointer for it.
-    private GameObject[] pBulletPool = new GameObject[64];
+    private GameObject[] pBulletPool = new GameObject[128];
     private byte pBulletPointer = 0;
 
     // Cooldown determines the fire rate of the player's weapon.
@@ -40,10 +40,16 @@ public class PlayerCombat : MonoBehaviour
         private set;
     }
 
+    public float bulletDeviation
+    {
+        get;
+        private set;
+    }
+
     private void Start()
     {
         // Init starter cooldown.
-        Cooldown = 0.15f;
+        Cooldown = 0.1f;
 
         // Initialize the player bullet pool to an offscreen position in the inactive state.
         for (int i = 0; i < pBulletPool.Length; i++)
@@ -57,6 +63,8 @@ public class PlayerCombat : MonoBehaviour
 
         // Init damage per projectile.
         Damage = 1;
+
+        bulletDeviation = 0f;
     }
 
     private void Update()
@@ -75,7 +83,13 @@ public class PlayerCombat : MonoBehaviour
         pBulletPointer++;
         if(pBulletPointer >= pBulletPool.Length) { pBulletPointer = 0; }
         
-        // 0.15s cooldown per shot (Between 6 and 7 shots per second).
-        Cooldown = 0.15f;
+        // 0.1s cooldown per shot (10 shots per second).
+        Cooldown = 0.1f;
+
+        // Deviation is stored and modified per frame. Stored deviation means that the angle of firing is randomized within a range limit, but
+        // is more predictable, instead of random range values per projectile.
+        bulletDeviation += UnityEngine.Random.Range(-0.04f, 0.04f);
+        if (bulletDeviation > 0.125f) { bulletDeviation = 0.125f; }
+        else if (bulletDeviation < -0.125f) { bulletDeviation = -0.125f; }
     }
 }

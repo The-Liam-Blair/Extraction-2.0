@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using UnityEditor;
 using UnityEngine;
 
 public class PlayerMinigunProjectile : Projectile
@@ -12,13 +14,19 @@ public class PlayerMinigunProjectile : Projectile
         base.OnEnable();
 
         // Determine the new deviation value for this bullet when it's fired. Changes every time the bullet is re-enabled.
-        yDeviation = Random.Range(-0.09f, 0.09f);
+        yDeviation = GameObject.Find("Player").GetComponent<PlayerCombat>().bulletDeviation;
 
-        // temp
         Angle = new Vector2(1, yDeviation);
         Angle.Normalize();
-        Velocity = 75;
+        Velocity = 125;
+    }
 
-        gameObject.GetComponent<Rigidbody2D>().velocity = Angle * Velocity;
+    protected override void Update()
+    {
+        // Decrease Angle's Y value over time by a gravity force.
+        Angle.y -= 0.0003f;
+
+        // Move the bullet in the direction of the angle vector.
+        transform.Translate(Angle * Velocity * Time.deltaTime);
     }
 }

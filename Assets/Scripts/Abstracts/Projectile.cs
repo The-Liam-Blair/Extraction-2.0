@@ -47,6 +47,13 @@ public abstract class Projectile : MonoBehaviour
         StartCoroutine(DisableInitialCollisions());
     }
 
+    /// <summary>
+    /// All projectiles need to implement their own movement method; movement is done with the .Translate() method.
+    /// </summary>
+    protected virtual void Update()
+    {
+    }
+
 
     /// <summary>
     /// Handle collision events between this projectile and the other entity.
@@ -54,7 +61,7 @@ public abstract class Projectile : MonoBehaviour
     /// may be any tag from the <see cref="collisionType"/> set.
     /// </summary>
     /// <param name="other">Other collider</param>
-    protected virtual void OnCollisionEnter2D(Collision2D other)
+    protected virtual void OnTriggerEnter2D(Collider2D other)
     {
         // Attempt to convert this projectile's and the other entity's tags into their respective collisionType enum objects. Throw an error if this operation fails.
         if (System.Enum.TryParse(transform.tag, out collisionType thisProjectile) && // Parse this projectile, send result to thisProjectile.
@@ -65,8 +72,8 @@ public abstract class Projectile : MonoBehaviour
                 // Projectile hit player
                 case collisionType.Player:
 
-                    // If an enemy's projectile hit the player, hurt the player. Player projectile to player collisions are ignored.
-                    if(thisProjectile == collisionType.EnemyProjectile) { other.transform.GetComponent<PlayerMovement>().HurtPlayer(); }
+                    // If an enemy's projectile (indestructible or not) hit the player, hurt the player. Player projectile to player collisions are ignored.
+                    if(thisProjectile == collisionType.EnemyProjectile || thisProjectile == collisionType.EnemyIndestructibleProjectile) { other.transform.GetComponent<PlayerMovement>().HurtPlayer(); }
                     gameObject.SetActive(false);
                     break;
 
@@ -89,7 +96,7 @@ public abstract class Projectile : MonoBehaviour
                     // If the player's projectile hits an enemy, hurt the enemy.
                     // If an enemy's projectile hits an enemy, destroy the enemy. (Pass in a massive value through the hurt method).
                     if (thisProjectile == collisionType.PlayerProjectile) { other.transform.GetComponent<Enemy>().HurtEnemy(1); }
-                    else if (thisProjectile == collisionType.EnemyProjectile) { other.transform.GetComponent<Enemy>().HurtEnemy(9999); }
+                    else if (thisProjectile == collisionType.EnemyProjectile || thisProjectile == collisionType.EnemyIndestructibleProjectile) { other.transform.GetComponent<Enemy>().HurtEnemy(9999); }
                     gameObject.SetActive(false);
                     break;
 
