@@ -239,6 +239,8 @@ public abstract class Enemy : MonoBehaviour
     // Reference to the enemy projectile manager, used by enemies to fire projectiles.
     protected EnemyProjectileManager projectileLauncher;
 
+    protected ScoreOnKill scoreOnKill;
+
 
     public void Start()
     {
@@ -253,6 +255,8 @@ public abstract class Enemy : MonoBehaviour
         hurtSprite = transform.GetChild(0).gameObject;
 
         projectileLauncher = GameObject.Find("_GAMEMANAGER").GetComponent<EnemyProjectileManager>();
+
+        scoreOnKill = GameObject.Find("_GAMEMANAGER").GetComponent<ScoreOnKill>();
     }
 
     /// <summary>
@@ -351,6 +355,7 @@ public abstract class Enemy : MonoBehaviour
     /// derived animations are to modify components during explosions, such as the collision.
     /// </summary>
     protected virtual void Explode() { 
+        scoreOnKill.DisplayScore(ScoreOnDeath, transform.position);
         isExploding = true;
         GetComponent<Animator>().Play("Explode");
     }
