@@ -89,7 +89,9 @@ public class EnemyTurret : Enemy
         AimAngle = (player.transform.position - gun.transform.position).normalized;
 
         var velocityScalar = 100;
-        projectileLauncher.FireNewProjectile(gun.transform.position, 0, AimAngle, velocityScalar);
+        gameManager.InvokeManagerMethod<object>("EnemyProjectileManager",
+                                    "FireNewProjectile", 
+                               gun.transform.position, 0, AimAngle, velocityScalar);
 
     }
 

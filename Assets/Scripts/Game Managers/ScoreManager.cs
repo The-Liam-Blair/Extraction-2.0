@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScoreOnKill : MonoBehaviour
+public class ScoreManager : MonoBehaviour, IManager
 {
     [SerializeField] private GameObject scoreObject;
 
@@ -11,6 +11,7 @@ public class ScoreOnKill : MonoBehaviour
     private int pointer;
 
     private GameManager gameManager;
+    public string ManagerName { get; set; }
 
     private void Start()
     {
@@ -26,17 +27,17 @@ public class ScoreOnKill : MonoBehaviour
         gameManager = GameManager.Instance;
     }
 
-    // TODO: Adjust game manager functions calls with a mediator pattern (see chat gpt for example).
-
+    /// <summary>
+    /// Called by an enemy on death to display the score value as an indicator of the score reward the player received for defeating that enemy.
+    /// Also adds that score to the player's total.
+    /// </summary>
+    /// <param name="score">Score value.</param>
+    /// <param name="position">Enemy position (to place the score relatively next to).</param>
     public void DisplayScore(int score, Vector3 position)
     {
         ScoreOutput[pointer].SetActive(true);
         ScoreOutput[pointer].GetComponent<RectTransform>().position = position + new Vector3(0, 10f, 0);
         ScoreOutput[pointer].GetComponent<Text>().text = "+" + score + "!";
-
-        Debug.DrawLine(position, ScoreOutput[pointer].GetComponent<RectTransform>().position, Color.red, 3f);
-        Debug.DrawLine(Vector3.zero, ScoreOutput[pointer].GetComponent<RectTransform>().position, Color.cyan, 3f);
-        Debug.Log(position + "\n" + ScoreOutput[pointer].GetComponent<RectTransform>().position);
 
         pointer++;
         if (pointer >= ScoreOutput.Length) { pointer = 0; }

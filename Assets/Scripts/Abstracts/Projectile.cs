@@ -119,7 +119,7 @@ public abstract class Projectile : MonoBehaviour
         }
         else
         {
-            Debug.Log("ERROR: UNKNOWN COLLISION TYPE DETECTED (ENUM CONVERSION FAILED)." + "\n OBJECT: " + gameObject.name + "\n SCRIPT: " + name);
+            Debug.LogError($"ERROR: Unknown collision type detected (Enum conversion failed)." + "\n Object '{gameObject.name}.' \n Script '{name}'.");
 
         }
     }

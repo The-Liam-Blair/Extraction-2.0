@@ -236,10 +236,9 @@ public abstract class Enemy : MonoBehaviour
 
     protected GameObject player;
 
-    // Reference to the enemy projectile manager, used by enemies to fire projectiles.
-    protected EnemyProjectileManager projectileLauncher;
 
-    protected ScoreOnKill scoreOnKill;
+    // Game manager reference, which uses the mediator pattern to call methods from other managers.
+    protected GameManager gameManager;
 
 
     public void Start()
@@ -254,9 +253,7 @@ public abstract class Enemy : MonoBehaviour
         // Fetch hurt sprite, which is the 1st child of each enemy.
         hurtSprite = transform.GetChild(0).gameObject;
 
-        projectileLauncher = GameObject.Find("_GAMEMANAGER").GetComponent<EnemyProjectileManager>();
-
-        scoreOnKill = GameObject.Find("_GAMEMANAGER").GetComponent<ScoreOnKill>();
+        gameManager = GameManager.Instance;
     }
 
     /// <summary>
@@ -354,8 +351,12 @@ public abstract class Enemy : MonoBehaviour
     /// Each enemy has a derived Explode() function but will always call this base function to play the exploding animation. The
     /// derived animations are to modify components during explosions, such as the collision.
     /// </summary>
-    protected virtual void Explode() { 
-        scoreOnKill.DisplayScore(ScoreOnDeath, transform.position);
+    protected virtual void Explode()
+    {
+        gameManager.InvokeManagerMethod<object>("ScoreManager",
+            "DisplayScore",
+            ScoreOnDeath, transform.position);
+
         isExploding = true;
         GetComponent<Animator>().Play("Explode");
     }

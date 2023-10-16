@@ -6,12 +6,14 @@ using UnityEngine;
 /// Class manages the bullets for all enemies that fire projectiles.
 /// Each projectile type has it's own pool and pointer.
 /// </summary>
-public class EnemyProjectileManager : MonoBehaviour
+public class EnemyProjectileManager : MonoBehaviour, IManager
 {
     // Turret projectile pool
     [SerializeField] private GameObject turretBullet;
     private GameObject[] tBulletPool = new GameObject[32];
     private byte tBulletPointer = 0;
+
+    public string ManagerName { get; set; }
 
     void Start()
     {
