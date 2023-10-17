@@ -25,6 +25,7 @@ public class EnemyTurret : Enemy
 
     private void Awake()
     {
+        base.Awake();
         canHitTerrain = true;
         gun = gameObject.transform.GetChild(1).gameObject;
         gunHurtSprite = gun.transform.GetChild(0).gameObject;
@@ -34,6 +35,8 @@ public class EnemyTurret : Enemy
 
     protected override void OnEnable()
     {
+        if (!Initialised) { return; } // For first pass only (On object instantiation): Skip method.
+
         Health = 10;
         MaxHealth = Health;
 
@@ -129,7 +132,9 @@ public class EnemyTurret : Enemy
     /// </summary>
     IEnumerator SetTurretYPos()
     {
-        GameObject.Find("_GAMEMANAGER").GetComponent<GenerateFloor>().GenerateFlatTerrain(1.5f); // Ensure terrain under turret is flat to minimize clipping.
+        // Ensure terrain under turret is flat to minimize clipping.
+        gameManager.InvokeManagerMethod<object>("GenerateFloor", "GenerateFlatTerrain", 1.5f);
+
         yield return new WaitForSeconds(0.75f); // Wait for flat terrain to spawn.
         transform.position = new Vector2(transform.position.x,
             GetYFloorPosition()); // Find correct position to place the turret by performing a downwards ray cast, which is the flat terrain below.

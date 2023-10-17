@@ -8,6 +8,7 @@ public class EnemyMine : Enemy
 
     private void Awake()
     {
+        base.Awake();
         canHitTerrain = false;
         ScoreOnDeath = 100;
     }
@@ -15,6 +16,8 @@ public class EnemyMine : Enemy
     // When object is active again, re-initialise it's properties.
     protected override void OnEnable()
     {
+        if(!Initialised) { return; } // For first pass only (On object instantiation): Skip method.
+
         Health = 10;
         MaxHealth = Health;
         

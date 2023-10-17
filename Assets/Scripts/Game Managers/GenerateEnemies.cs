@@ -46,8 +46,9 @@ public class GenerateEnemies : MonoBehaviour
             {
                 Enemies[i].Add(Instantiate(EnemyPrefabs[i], new Vector3(-1, -1, 0), Quaternion.identity));
                 Enemies[i][j].transform.SetParent(GameObject.Find("_ENEMYMANAGER").transform, true);
-                Enemies[i][j].SetActive(false);
                 Enemies[i][j].name = EnemyPrefabs[i].name + " [" + j + "]";
+                Enemies[i][j].GetComponent<Enemy>().Initialised = true;
+                Enemies[i][j].SetActive(false);
             }
         }
 

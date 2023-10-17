@@ -37,7 +37,7 @@ public class ScoreManager : MonoBehaviour, IManager
     {
         ScoreOutput[pointer].SetActive(true);
         ScoreOutput[pointer].GetComponent<RectTransform>().position = position + new Vector3(0, 10f, 0);
-        ScoreOutput[pointer].GetComponent<Text>().text = "+" + score + "!";
+        ScoreOutput[pointer].GetComponent<Text>().text = $"+{score}!";
 
         pointer++;
         if (pointer >= ScoreOutput.Length) { pointer = 0; }

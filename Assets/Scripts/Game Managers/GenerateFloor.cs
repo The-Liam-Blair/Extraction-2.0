@@ -8,7 +8,7 @@ using UnityEngine;
 // Note: The first value is inclusive, the second value is exclusive: Random.Range(inclusiveMin, exclusiveMax);
 using Random = UnityEngine.Random;
 
-public class GenerateFloor : MonoBehaviour
+public class GenerateFloor : MonoBehaviour, IManager
 {
     [SerializeField] private GameObject floorTile;
     
@@ -38,6 +38,8 @@ public class GenerateFloor : MonoBehaviour
     // Timer that prevents the height of terrain from changing. Used normally to set a small flat piece of land to spawn an enemy without it clipping
     // into the ground.
     private float FlatTerrainTimer = 0.0f;
+
+    public string ManagerName { get; set; }
 
     private void Awake()
     {

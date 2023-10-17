@@ -32,13 +32,21 @@ public class GameManager : MonoBehaviour
         //
         // This is a temporary solution to collecting manager references: Later on, a better way would be to
         // instantiate the relevant managers as per scene/level requirements instead of having all managers active constantly.
+
+        // Enemy Projectile Manager: Handles spawning and initialization of enemy projectiles.
         var projMan = GameObject.Find("_GAMEMANAGER").GetComponent<EnemyProjectileManager>();
         projMan.ManagerName = "EnemyProjectileManager";
         managers.Add(projMan);
 
+        // Score Manager: Handles retrieving score values for enemies and displaying them on death, and accumulating the player's total score.
         var scoreMan = GameObject.Find("_GAMEMANAGER").GetComponent<ScoreManager>();
         scoreMan.ManagerName = "ScoreManager";
         managers.Add(scoreMan);
+
+        // Floor Manager: Handles the constant generation of floor tiles.
+        var FloorMan = GameObject.Find("_GAMEMANAGER").GetComponent<GenerateFloor>();
+        FloorMan.ManagerName = "GenerateFloor";
+        managers.Add(FloorMan);
     }
 
     public void AddScore(int score)

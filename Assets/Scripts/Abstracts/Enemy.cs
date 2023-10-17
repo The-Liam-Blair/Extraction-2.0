@@ -169,6 +169,18 @@ public abstract class Enemy : MonoBehaviour
     }
 
     /// <summary>
+    /// One-time use variable to work around the implementation of .Instantiate(), which calls OnEnable() (WHY?!) immediately: This flag essentially
+    /// blocks OnEnable() from running on this first pass, as the object is in a deactivated state initially and since enemies rely on other managers, can
+    /// lead to null reference exceptions.
+    /// Thank you Unity :)
+    /// </summary>
+    public bool Initialised
+    {
+        get;
+        set;
+    }
+
+    /// <summary>
     /// Can this enemy touch terrain without being destroyed?
     /// </summary>
     protected bool canHitTerrain
@@ -236,10 +248,14 @@ public abstract class Enemy : MonoBehaviour
 
     protected GameObject player;
 
-
     // Game manager reference, which uses the mediator pattern to call methods from other managers.
     protected GameManager gameManager;
 
+    protected void Awake()
+    {
+        gameManager = GameManager.Instance;
+        Initialised = false;
+    }
 
     public void Start()
     {
@@ -252,12 +268,10 @@ public abstract class Enemy : MonoBehaviour
 
         // Fetch hurt sprite, which is the 1st child of each enemy.
         hurtSprite = transform.GetChild(0).gameObject;
-
-        gameManager = GameManager.Instance;
     }
 
     /// <summary>
-    /// Enemy (re)spawns -> (Re)initialise game stats such as health and position.
+    /// Enemy (re)spawns -> (Re)initialise enemy stats.
     /// </summary>
     protected virtual void OnEnable() {}
 
